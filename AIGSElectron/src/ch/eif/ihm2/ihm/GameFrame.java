@@ -77,7 +77,7 @@ public class GameFrame extends JFrame implements KeyEventDispatcher{
 	public void startGame(String infoP1, String infoP2,boolean isPlayer2Select){
 		setPlayer2Select(isPlayer2Select);
 		setInfoP2(infoP2);
-		setInfoP2(infoP1);
+		setInfoP1(infoP1);
 		menuPanel.setVisible(false);
 		if(infoP1 == "AI"){
 			p1 = Settings.getInstance().getAiP1();
@@ -87,7 +87,7 @@ public class GameFrame extends JFrame implements KeyEventDispatcher{
 			 k1 = Settings.getInstance().getKeyboardLayoutP1();
 			 p1 = Settings.getInstance().getPlayer1();
 		}
-		if(!isPlayer2Select ){
+		if(!isPlayer2Select){
 			p2 = null;
 			k2 = null;
 		}
