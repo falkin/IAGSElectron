@@ -25,6 +25,8 @@ public class Settings implements ISettings, Serializable {
    private int                  weaponRechargeTime;
    private Player               p1;
    private Player               p2;
+   private Player               ai1;
+   private Player               ai2;
    private Constants.DIFFICULTY difficulty;
    private LinkedList<IScore>   scores;
 
@@ -38,8 +40,9 @@ public class Settings implements ISettings, Serializable {
     */
    public static ISettings getInstance() {
       // Try to deserialize
-      if (settings_instance == null)
+      if (settings_instance == null){
          retrieveSettingsFromDisk();
+      }
       // If no serialization is available, create a new settings object with
       // default values
       if (settings_instance == null)
@@ -60,6 +63,9 @@ public class Settings implements ISettings, Serializable {
       settings_instance.weaponRechargeTime = Constants.DEFAULT_WEAPONRECHARGETIME;
       settings_instance.p1 = Player.getDefaultP1();
       settings_instance.p2 = Player.getDefaultP2();
+      settings_instance.ai1 = Player.getDefaultIA1();
+      settings_instance.ai2 = Player.getDefaultIA2();
+    		  
       settings_instance.setDifficulty(DIFFICULTY.NORMAL);
       settings_instance.scores = new LinkedList<IScore>();
    }
@@ -119,7 +125,7 @@ public class Settings implements ISettings, Serializable {
     * Saves the highscore and stores the result on the disk.
     * 
     */
-   public void saveHighScore(Player winner, int ticks) {
+   public void saveHighScore(IPlayerPlaying winner, int ticks) {
       boolean todo = true;
       for (IScore s : scores)
          if (s.getPlayerName().equals(winner.getName())) {
@@ -192,7 +198,20 @@ public class Settings implements ISettings, Serializable {
    public Player getP2() {
       return p2;
    }
+   public void setAi1(Player ai1) {
+		this.ai1 = ai1;
+	}
 
+	public void setAi2(Player ai2) {
+		this.ai2 = ai2;
+	}
+	   public Player getAi1() {
+			return ai1;
+		}
+
+		public Player getAi2() {
+			return ai2;
+		}
    @Override
    public Locale getLanguage() {
       return locale;
@@ -207,7 +226,15 @@ public class Settings implements ISettings, Serializable {
    public IPlayer getPlayer2() {
       return p2;
    }
+   @Override
+   public IPlayer getAiP1() {
+      return ai1;
+   }
 
+   @Override
+   public IPlayer getAiP2() {
+      return ai2;
+   }
    public Constants.DIFFICULTY getDifficulty() {
       return difficulty;
    }

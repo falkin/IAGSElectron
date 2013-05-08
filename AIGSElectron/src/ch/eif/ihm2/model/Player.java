@@ -20,7 +20,7 @@ public class Player implements IPlayer, Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -316588156939713709L;
-private String name;
+   private String name;
    private Color color;
 
    public Player(String name, Color color) {
@@ -51,7 +51,22 @@ private String name;
    public static Player getDefaultP2(){
       return new Player(Constants.DEFAULT_P2_NAME, Constants.DEFAULT_P2_COLOR);
    }
-
+   
+   /**
+    * Returns a Player instance with default values for player two.
+    * 
+    */
+   public static Player getDefaultIA1(){
+      return new Player(Constants.DEFAULT_AI, Constants.DEFAULT_P1_COLOR);
+   }
+   
+   /**
+    * Returns a Player instance with default values for player two.
+    * 
+    */
+   public static Player getDefaultIA2(){
+      return new Player(Constants.DEFAULT_AI, Constants.DEFAULT_P2_COLOR);
+   }
    @Override
    public void setColor(Color color) {
       this.color = color;

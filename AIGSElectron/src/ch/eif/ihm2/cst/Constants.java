@@ -55,6 +55,9 @@ public class Constants {
    // Settings constants
    public static final String DEFAULT_P1_NAME = "Player 1";
    public static final String DEFAULT_P2_NAME = "Player 2";
+   public static final String DEFAULT_AI  = "AI";
+   public static final  String[] NAME_P1_LIST = {  DEFAULT_P1_NAME, DEFAULT_AI};
+   public static final  String[] NAME_P2_LIST = {  DEFAULT_P2_NAME, DEFAULT_AI};
    public static final String SETTINGS_FILENAME = "settings.ser";
    public static final Color DEFAULT_P1_COLOR = Color.RED;
    public static final Color DEFAULT_P2_COLOR = Color.BLUE;

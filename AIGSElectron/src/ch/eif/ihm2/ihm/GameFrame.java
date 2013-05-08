@@ -40,7 +40,10 @@ public class GameFrame extends JFrame implements KeyEventDispatcher{
 	private Command p1up,p1right,p1down,p1left, p1shoot; //commands for player 1
 	private Command p2up,p2right,p2down,p2left, p2shoot; //commands for player 2
 	private StateManager s = null;
-	
+	private String infoP1;
+
+	private String infoP2;
+	private boolean isPlayer2Select;
 	/**
 	 * GameFrame constructor
 	 * @param m - IModelOperations
@@ -71,13 +74,32 @@ public class GameFrame extends JFrame implements KeyEventDispatcher{
 	/**
 	 * called by the menu, starts the game
 	 */
-	public void startGame(){
+	public void startGame(String infoP1, String infoP2,boolean isPlayer2Select){
+		setPlayer2Select(isPlayer2Select);
+		setInfoP2(infoP2);
+		setInfoP2(infoP1);
 		menuPanel.setVisible(false);
+		if(infoP1 == "AI"){
+			p1 = Settings.getInstance().getAiP1();
+			k1 = null;
+		}
+		else{
+			 k1 = Settings.getInstance().getKeyboardLayoutP1();
+			 p1 = Settings.getInstance().getPlayer1();
+		}
+		if(!isPlayer2Select ){
+			p2 = null;
+			k2 = null;
+		}
+		else if(infoP2 == "AI"){
+			p2 = Settings.getInstance().getAiP2();
+			k2 = null;
+		}
+		else{
+			 k2 = Settings.getInstance().getKeyboardLayoutP2();
+			 p2 = Settings.getInstance().getPlayer2();
+		}
 
-        k1 = Settings.getInstance().getKeyboardLayoutP1();
-        k2 = Settings.getInstance().getKeyboardLayoutP2();
-        p1 = Settings.getInstance().getPlayer1();
-        p2 = Settings.getInstance().getPlayer2();
         gamePanel.setColorP1(p1.getColor());
         gamePanel.setColorP2(p2.getColor());
         
@@ -160,25 +182,25 @@ public class GameFrame extends JFrame implements KeyEventDispatcher{
 		 //if (e.getID() == KeyEvent.KEY_TYPED) {}
 		 if (e.getID() == KeyEvent.KEY_PRESSED) {
 			int c = e.getKeyCode();
-			if(c == k1.getUp())
+			if(k1!=null && c == k1.getUp())
 				p1up.execute();
-			else if(c == k1.getRight())
+			else if(k1!=null && c == k1.getRight())
 				p1right.execute();
-			else if(c == k1.getDown())
+			else if(k1!=null && c == k1.getDown())
 				p1down.execute();
-			else if(c == k1.getLeft())
+			else if(k1!=null && c == k1.getLeft())
 				p1left.execute();
-			else if(c == k1.getShoot())
+			else if(k1!=null && c == k1.getShoot())
 				p1shoot.execute();
-			else if(c == k2.getUp())
+			else if(k2!=null && c == k2.getUp())
 				p2up.execute();
-			else if(c == k2.getRight())
+			else if(k2!=null &&c == k2.getRight())
 				p2right.execute();
-			else if(c == k2.getDown())
+			else if(k2!=null &&c == k2.getDown())
 				p2down.execute();
-			else if(c == k2.getLeft())
+			else if(k2!=null &&c == k2.getLeft())
 				p2left.execute();
-			else if(c == k2.getShoot())
+			else if(k2!=null &&c == k2.getShoot())
 				p2shoot.execute();
          } 
 		 return false;
@@ -215,4 +237,23 @@ public class GameFrame extends JFrame implements KeyEventDispatcher{
 			g2d.fillRect(0, 0, getWidth(), getHeight());
 		}
 	}*/
+	
+	public String getInfoP1() {
+		return infoP1;
+	}
+	public void setInfoP1(String infoP1) {
+		this.infoP1 = infoP1;
+	}
+	public String getInfoP2() {
+		return infoP2;
+	}
+	public void setInfoP2(String infoP2) {
+		this.infoP2 = infoP2;
+	}
+	public boolean isPlayer2Select() {
+		return isPlayer2Select;
+	}
+	public void setPlayer2Select(boolean isPlayer2Select) {
+		this.isPlayer2Select = isPlayer2Select;
+	}
 }

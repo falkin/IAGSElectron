@@ -16,7 +16,7 @@ import ch.eif.ihm2.model.*;
  * 
  */
 @SuppressWarnings("serial")
-public class MenuPanel extends JDialog {
+public class MenuPanel extends JDialog  {
 	private IModelOperations iModOp;
 	private GameFrame parent;
 	private ISettings settings; // Settings reference for asynchronous modifications
@@ -24,6 +24,7 @@ public class MenuPanel extends JDialog {
 	private JTabbedPane menuTabbedPane = new JTabbedPane();
 	private JLabel title = new JLabel();
 	private JLabel player1Lab = new JLabel();
+	private JLabel desactivatePlayer2 = new JLabel();
 	private JTextField inputPlayer1Name = new JTextField(20);
 	private JButton colorBtP1 = new JButton();
 	private JLabel player2Lab = new JLabel();
@@ -44,6 +45,9 @@ public class MenuPanel extends JDialog {
 	private JSpinner rec = new JSpinner();
 	private JSpinner maxlen = new JSpinner();
 	private JLabel labData = new JLabel();
+	private JComboBox player1List = new JComboBox(Constants.NAME_P1_LIST);
+	private JComboBox player2List = new JComboBox(Constants.NAME_P2_LIST);
+	private JCheckBox chkPlayer2 = new JCheckBox();
 	private JButton load = new JButton();
 	private JButton save = new JButton();
 	private JButton reset = new JButton();
@@ -53,7 +57,7 @@ public class MenuPanel extends JDialog {
 	private JLabel msgLab = new JLabel("  ");
 	private MovementKeyPanel k1 = new MovementKeyPanel(1);
 	private MovementKeyPanel k2 = new MovementKeyPanel(2);
-
+	private MovementKeyPanel k3 = new MovementKeyPanel(3);
 	/**
 	 * Constructor
 	 * 
@@ -105,6 +109,7 @@ public class MenuPanel extends JDialog {
 		title.setText(Translate.fromKey("title"));
 		player1Lab.setText(Translate.fromKeyWithParam("playerNb",
 				new Integer(1)));
+		desactivatePlayer2.setText(Translate.fromKey("menu.activate"));
 		colorBtP1.setText(Translate.fromKey("menu.menutab.color"));
 		player2Lab.setText(Translate.fromKeyWithParam("playerNb",
 				new Integer(2)));
@@ -136,12 +141,18 @@ public class MenuPanel extends JDialog {
 	 */
 	public void reLoadContent() {
 		// Main
-		inputPlayer1Name.setText(settings.getPlayer1().getName());
+		player1List.setSelectedIndex(1);
+		//player1List.addActionListener(this);
+	 
+		player2List.setSelectedIndex(0);
+		//player2List.addActionListener(this);
+
+		//inputPlayer1Name.setText(settings.getPlayer1().getName());
 		iModOp.getInfoPropertyChangeSupport().firePropertyChange("name1", null,
-				settings.getPlayer1().getName());
-		inputPlayer2Name.setText(settings.getPlayer2().getName());
+				Constants.DEFAULT_AI);
+		//inputPlayer2Name.setText(settings.getPlayer2().getName());
 		iModOp.getInfoPropertyChangeSupport().firePropertyChange("name2", null,
-				settings.getPlayer2().getName());
+				Constants.DEFAULT_P2_NAME);
 		colorBtP1.setForeground(settings.getPlayer1().getColor());
 		colorBtP2.setForeground(settings.getPlayer2().getColor());
 		switch (settings.getDifficulty()) {
@@ -176,7 +187,7 @@ public class MenuPanel extends JDialog {
 		// Settings
 		k1.reloadContent();
 		k2.reloadContent();
-		
+		k3.reloadContent();
 		rec.setModel(new SpinnerNumberModel(iModOp.getSettings()
 				.getWeaponRechargeTime(), 0, Constants.MAX_RECTIME, 1));
 		maxlen.setModel(new SpinnerNumberModel(iModOp.getSettings()
@@ -191,7 +202,7 @@ public class MenuPanel extends JDialog {
 	 */
 	public JPanel getMenuTab() {
 		MigLayout menuLayout = new MigLayout("", "[]20[grow]20[]",
-				"20[]20[][]30[][][]");
+				"20[]20[][][]30[][][]");
 
 		JPanel menupan = new JPanel(menuLayout);
 		
@@ -200,7 +211,8 @@ public class MenuPanel extends JDialog {
 		title.setHorizontalAlignment(JLabel.CENTER);
 		menupan.add(title, "growx, span, center,gaptop 20,gapbottom 20");
 
-		inputPlayer1Name.addFocusListener(new FocusListener() {
+		
+	/*	inputPlayer1Name.addFocusListener(new FocusListener() {
 			public void focusLost(FocusEvent arg0) {
 				if (inputPlayer1Name.getText().equals("")) {
 					inputPlayer1Name.setText(Constants.DEFAULT_P1_NAME);
@@ -309,18 +321,48 @@ public class MenuPanel extends JDialog {
 						iModOp.getInfoPropertyChangeSupport()
 								.firePropertyChange("name2", null, newText);
 					}
-				});
-		
+				});*/
+
 		menupan.add(player1Lab, "shrink, gapleft 20");
-		menupan.add(inputPlayer1Name, "gapleft 20, growx");
+		menupan.add(player1List, "gapleft 20, growx");
 		colorBtP1.addActionListener(colorswitch);
 		menupan.add(colorBtP1, "right, gapright 20, wrap");
 
 		menupan.add(player2Lab, "shrink, gapleft 20");
-		menupan.add(inputPlayer2Name, "gapleft 20, growx");
+		menupan.add(player2List, "gapleft 20, growx");
 		colorBtP2.addActionListener(colorswitch);
 		menupan.add(colorBtP2, "right, gapright 20, wrap");
-
+		menupan.add(desactivatePlayer2,  "shrink, gapleft 20");
+		menupan.add(chkPlayer2,  " gapleft 20,  wrap");
+		
+		player1List.addItemListener(selectPlayer1);
+		player2List.addItemListener(selectPlayer2);
+		
+		chkPlayer2.setSelected(true);
+		chkPlayer2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (chkPlayer2.isSelected()) {
+					player2List.setEnabled(true);
+					colorBtP2.setEnabled(true);	
+					iModOp.getInfoPropertyChangeSupport().firePropertyChange("name2", null,
+							player2List.getSelectedItem());
+					iModOp.getInfoPropertyChangeSupport().firePropertyChange("coverPlayer2", null,
+							true);	
+				}
+				else{
+					player2List.setEnabled(false);
+					colorBtP2.setEnabled(false);
+					iModOp.getInfoPropertyChangeSupport().firePropertyChange("name2", null,
+							"");
+					iModOp.getInfoPropertyChangeSupport().firePropertyChange("coverPlayer2", null,
+							false);					
+				}
+			}
+		});
+		iModOp.getInfoPropertyChangeSupport().firePropertyChange(
+				"name1", null, player1List.getSelectedItem().toString());	
+		 iModOp.getInfoPropertyChangeSupport().firePropertyChange(
+					"name2", null, player2List.getSelectedItem().toString());
 		radioBtSlow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (radioBtSlow.isSelected()) {
@@ -352,7 +394,7 @@ public class MenuPanel extends JDialog {
 				}
 			}
 		});
-
+		
 		menupan.add(labSpeed,"span, gapleft 20");
 		langCombo.addActionListener(langAct);
 
@@ -368,7 +410,7 @@ public class MenuPanel extends JDialog {
 
 		btPlay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				parent.startGame();
+				parent.startGame(player1List.getSelectedItem().toString(),player2List.getSelectedItem().toString(),chkPlayer2.isSelected());
 			}
 		});
 		menupan.add(btPlay, "span, w 200!, h 40!, center, wrap");
@@ -392,7 +434,7 @@ public class MenuPanel extends JDialog {
 		settingsPan.add(k1, "cell 0 1 1 1, gapleft 20");
 		settingsPan.add(labShoot, "cell 1 1 1 1, growx, bottom, gapbottom 5");
 		settingsPan.add(k2, "cell 2 1 1 1, right, gapright 20");
-
+	
 		settingsPan.add(labReammo, "cell 0 2 1 1, gapleft 20");
 		rec.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
@@ -411,7 +453,7 @@ public class MenuPanel extends JDialog {
 		});
 		
 		settingsPan.add(maxlen, "cell 2 3 1 1, right, gapright 20");
-
+		
 		load.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				new Thread(new Runnable() {
@@ -511,7 +553,41 @@ public class MenuPanel extends JDialog {
 			parent.retranslate();
 		}
 	};
-
+	/*
+	 * ActionListener to handle color choosers
+	 */
+	ItemListener  selectPlayer1 = new ItemListener() {
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			 if (e.getStateChange() == ItemEvent.SELECTED) {
+		          Object item = e.getItem();
+		          if(item == "AI"){
+		        	  iModOp.getInfoPropertyChangeSupport().firePropertyChange(
+								"name1", null, item);	  
+		          }
+		          else{
+		        	  iModOp.getInfoPropertyChangeSupport().firePropertyChange(
+								"name1", null, item);	
+		          }// do something with object
+		       }
+		}
+	};
+	ItemListener  selectPlayer2 = new ItemListener() {
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			 if (e.getStateChange() == ItemEvent.SELECTED) {
+		          Object item = e.getItem();
+		          if(item == "AI"){
+		        	  iModOp.getInfoPropertyChangeSupport().firePropertyChange(
+								"name2", null, item);	        	  
+		          }
+		          else{
+		        	  iModOp.getInfoPropertyChangeSupport().firePropertyChange(
+								"name2", null, item);	
+		          }// do something with object
+		       }
+		}
+	};
 	/*
 	 * ActionListener to handle color choosers
 	 */
@@ -582,4 +658,6 @@ public class MenuPanel extends JDialog {
 			}
 		}
 	};
+
+
 }

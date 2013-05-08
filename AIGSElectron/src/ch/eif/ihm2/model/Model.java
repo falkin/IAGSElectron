@@ -31,9 +31,13 @@ public class Model implements IModelOperations {
    private ISettings             settings                      = Settings.getInstance();
    private int                   ticks                         = 0;
    private GameFrame frame;
-
-   private PlayerPlaying         p1;
-   private BorderPlayerPlaying         p2;
+   private String         infoP1;
+   private String         infoP2;
+   private boolean         isP2Active;
+   
+   private IPlayerPlaying         p1;
+   private IPlayerPlaying         p2;
+  
 
    /**
     * Updates the two head segments of each player
@@ -86,6 +90,7 @@ public class Model implements IModelOperations {
       infoPCS.addPropertyChangeListener("color2", pcl);
       infoPCS.addPropertyChangeListener("name1", pcl);
       infoPCS.addPropertyChangeListener("name2", pcl);
+      infoPCS.addPropertyChangeListener("coverPlayer2", pcl);
       infoPCS.addPropertyChangeListener("progress1", pcl);
       infoPCS.addPropertyChangeListener("progress2", pcl);
       infoPCS.addPropertyChangeListener("highscore", pcl);
@@ -219,26 +224,52 @@ public class Model implements IModelOperations {
          weaponChargePerTick = 100.0/(ticksPerSecond*settings.getWeaponRechargeTime());
 
       // Initialize players
-      p1 = new PlayerPlaying(settings.getPlayer1().getName(), settings.getPlayer1().getColor());
-      p2 = new BorderPlayerPlaying(settings.getPlayer2().getName(), settings.getPlayer2().getColor());
-      p1.reset(true);
-      p2.reset(false);
-
+      if(gf.getInfoP1()=="AI"){
+    	  p1 = new BorderPlayerPlaying(settings.getAiP1().getName(), settings.getAiP1().getColor());
+    	  p1.reset(true);
+      }
+      else{
+    	  p1 = new PlayerPlaying(settings.getPlayer1().getName(), settings.getPlayer1().getColor());
+    	  p1.reset(true);
+      }
+      if(gf.isPlayer2Select() && gf.getInfoP2()=="AI"){
+    	  p2 = new BorderPlayerPlaying(settings.getAiP2().getName(), settings.getAiP2().getColor());
+    	  p2.reset(false);
+      }
+      else if (gf.isPlayer2Select()){
+    	  p2 = new PlayerPlaying(settings.getPlayer2().getName(), settings.getPlayer2().getColor());
+    	  p2.reset(false);
+      }    
+      isP2Active = gf.isPlayer2Select();
+      infoP1 = gf.getInfoP1();
+      infoP2 = gf.getInfoP2();
       SwingUtilities.invokeLater(new Runnable() {
          public void run() {
-            CommandDown p1down = new CommandDown(p1);
-            CommandDown p2down = new CommandDown(p2);
-            CommandUp p1up = new CommandUp(p1);
-            CommandUp p2up = new CommandUp(p2);
-            CommandLeft p1left = new CommandLeft(p1);
-            CommandLeft p2left = new CommandLeft(p2);
-            CommandRight p1right = new CommandRight(p1);
-            CommandRight p2right = new CommandRight(p2);
-            CommandShoot p1shoot = new CommandShoot(p1);
-            CommandShoot p2shoot = new CommandShoot(p2);
+        	   
+             CommandDown p2down =  null;
+             CommandUp p2up =  null;
+             CommandLeft p2left =  null;
+             CommandRight p2right = null;
+             CommandShoot p2shoot =  null;      	
+            
+             CommandDown	 p1down = new CommandDown(p1);
+             CommandUp	 	 p1up = new CommandUp(p1);
+             CommandLeft	 p1left = new CommandLeft(p1);
+             CommandRight	 p1right = new CommandRight(p1);
+             CommandShoot    p1shoot = new CommandShoot(p1);      	
+         
+             if (isP2Active){
+                 p2down = new CommandDown(p2);
+                 p2up = new CommandUp(p2);
+                 p2left = new CommandLeft(p2);
+                 p2right = new CommandRight(p2);
+                 p2shoot = new CommandShoot(p2);            	
+            
+            }
             frame.setCommands(p1up, p1down, p1left, p1right, p2up, p2down, p2left, p2right, p1shoot, p2shoot);
          }
       });
+      
       updateHeadSegments(p1, p2);
    }
 

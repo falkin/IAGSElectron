@@ -47,7 +47,11 @@ public interface ISettings {
 	
 	public void setDifficulty(Constants.DIFFICULTY difficulty);
 	
-	public void saveHighScore(Player winner, int ticks);
+	public void saveHighScore(IPlayerPlaying winner, int ticks);
 	
 	public LinkedList<IScore> getHighScore();
+
+	public IPlayer getAiP2();
+
+	public IPlayer getAiP1();
 }

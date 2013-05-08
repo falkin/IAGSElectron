@@ -31,5 +31,19 @@ public interface IPlayerPlaying {
 	public void requestShot();
 
 	public Direction getDirection();
+	
+	public void reset(boolean isP1);
+	
+	public boolean hasCollided(IPlayerPlaying p2);
+	
+	public void rechargeWeapon(int amount); 
+	
+	public boolean isShotRequested() ;
+	
+	public boolean readyToShoot();
+	
+	public  IBullet fire();
+	
+	public ISegment move(int maxLength);
 
 }

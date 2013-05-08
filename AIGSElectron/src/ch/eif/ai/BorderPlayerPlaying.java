@@ -155,7 +155,6 @@ public class BorderPlayerPlaying extends Player implements IPlayerPlaying {
 		directionChanged = false;
 		int posX = head().getToX();
 		int posY = head().getToY();
-		System.out.println(posY);
 		if (posY<50) {
 			posX++;
 		} else {

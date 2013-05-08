@@ -170,5 +170,9 @@ public class InfoPanel extends JPanel implements PropertyChangeListener {
 			highscore.updateUI();
 			highscore.revalidate();
 		}
+		else if(name.equals("coverPlayer2")){
+			colorP2.setVisible((Boolean)e.getNewValue());
+			chargeP2.setVisible((Boolean)e.getNewValue());
+		}
 	}
 }
