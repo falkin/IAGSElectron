@@ -224,6 +224,7 @@ public class Model implements IModelOperations {
          weaponChargePerTick = 100.0/(ticksPerSecond*settings.getWeaponRechargeTime());
 
       // Initialize players
+      World.getInstance().init();
       if(gf.getInfoP1()=="AI"){
     	  p1 = new BorderPlayerPlaying(settings.getAiP1().getName(), settings.getAiP1().getColor());
     	  p1.reset(true);

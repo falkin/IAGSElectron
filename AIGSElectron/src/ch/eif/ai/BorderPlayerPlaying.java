@@ -20,6 +20,7 @@ public class BorderPlayerPlaying extends Player implements IPlayerPlaying {
 	private boolean shotRequested = false;
 	private boolean directionChanged = false;
 	private Random random = new Random();
+	private World world = World.getInstance();
 
 	/**
 	 * Creates a Playing player for a normal player.
@@ -155,32 +156,51 @@ public class BorderPlayerPlaying extends Player implements IPlayerPlaying {
 		directionChanged = false;
 		int posX = head().getToX();
 		int posY = head().getToY();
-		if (posY<50) {
-			posX++;
-		} else {
-			switch (this.direction) {
-			case UP:
+
+		switch (this.direction) {
+		case UP:
+			if (!world.isObstacle(posX, posY - 1)) {
 				posY--;
-				break;
-			case DOWN:
-				posY++;
-				break;
-			case LEFT:
+			} else {
+				direction = Direction.LEFT;
 				posX--;
-				break;
-			case RIGHT:
-				posX++;
-				break;
-			default:
-				return null;
 			}
+			break;
+		case DOWN:
+			if (!world.isObstacle(posX, posY+1)) {
+				posY++;
+			} else {
+				direction = Direction.RIGHT;
+				posX++;
+			}
+			break;
+		case LEFT:
+			if (!world.isObstacle(posX-1, posY)) {
+				posX--;
+			} else {
+				direction = Direction.DOWN;
+				posY++;
+			}
+			break;
+		case RIGHT:
+			if (!world.isObstacle(posX+1, posY)) {
+				posX++;
+			} else {
+				direction = Direction.UP;
+				posY--;
+			}
+			break;
+		default:
+			return null;
 		}
+
 		Segment seg = new Segment(head().getToX(), head().getToY(), posX, posY);
 		segments.addLast(seg);
 		Segment retVal = null;
 		if (segments.size() == maxLength * Constants.PLAYER_MAXLENGTH_FACTOR)
 			retVal = segments.pollFirst();
 		updateLogicalSegments(seg, retVal);
+		world.set(posX,posY);
 		return retVal;
 	}
 
@@ -255,13 +275,19 @@ public class BorderPlayerPlaying extends Player implements IPlayerPlaying {
 		else
 			setDirection(Direction.UP);
 		int x = random.nextInt(Constants.WORLD_WIDTH);
-		if (isP1)
+		if (isP1){
 			first = new Segment(x, 0, x, 1);
-		else
+			world.set(x,0);			
+		}
+		else{
 			first = new Segment(x, Constants.WORLD_HEIGHT, x,
 					Constants.WORLD_HEIGHT - 1);
+			world.set(x,Constants.WORLD_HEIGHT);
+
+			}
 		segments.add(first);
 		logicalSegments.add(first.clone());
+		
 	}
 
 	/**
