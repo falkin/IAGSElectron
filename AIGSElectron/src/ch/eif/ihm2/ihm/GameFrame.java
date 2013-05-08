@@ -87,7 +87,7 @@ public class GameFrame extends JFrame implements KeyEventDispatcher{
 			 k1 = Settings.getInstance().getKeyboardLayoutP1();
 			 p1 = Settings.getInstance().getPlayer1();
 		}
-		if(!isPlayer2Select){
+		if(!isPlayer2Select ){
 			p2 = null;
 			k2 = null;
 		}
