@@ -1,26 +1,17 @@
-package ch.eif.ihm2.model;
+package ch.eif.ai;
 
 import java.awt.Color;
 import java.awt.Point;
 import java.util.LinkedList;
 import java.util.Random;
 
-import ch.eif.ihm2.cst.Constants;
+import ch.eif.ihm2.cst.*;
+import ch.eif.ihm2.model.*;
 
-/**
- * Contains the current status of a player which is playing.
- * 
- * @author Michael Heinzer
- * @version 1.0 - 02.01.2012
- * 
- */
+public class BorderPlayerPlaying extends Player implements IPlayerPlaying {
 
-public class PlayerPlaying extends Player implements IPlayerPlaying {
+	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6400465072631797784L;
 	private Direction direction;
 	private int weaponStatus = 100;
 	private LinkedList<Segment> segments = new LinkedList<Segment>();
@@ -29,12 +20,12 @@ public class PlayerPlaying extends Player implements IPlayerPlaying {
 	private boolean shotRequested = false;
 	private boolean directionChanged = false;
 	private Random random = new Random();
-	private World world = World.getInstance();
+
 	/**
 	 * Creates a Playing player for a normal player.
 	 * 
 	 */
-	public PlayerPlaying(String name, Color color) {
+	public BorderPlayerPlaying(String name, Color color) {
 		super(name, color);
 	}
 
@@ -42,7 +33,7 @@ public class PlayerPlaying extends Player implements IPlayerPlaying {
 	 * Creates a Playing player for a normal player.
 	 * 
 	 */
-	public PlayerPlaying(Player player) {
+	public BorderPlayerPlaying(Player player) {
 		this(player.getName(), player.getColor());
 	}
 
@@ -164,22 +155,26 @@ public class PlayerPlaying extends Player implements IPlayerPlaying {
 		directionChanged = false;
 		int posX = head().getToX();
 		int posY = head().getToY();
-
-		switch (this.direction) {
-		case UP:
-			posY--;
-			break;
-		case DOWN:
-			posY++;
-			break;
-		case LEFT:
-			posX--;
-			break;
-		case RIGHT:
+		System.out.println(posY);
+		if (posY<50) {
 			posX++;
-			break;
-		default:
-			return null;
+		} else {
+			switch (this.direction) {
+			case UP:
+				posY--;
+				break;
+			case DOWN:
+				posY++;
+				break;
+			case LEFT:
+				posX--;
+				break;
+			case RIGHT:
+				posX++;
+				break;
+			default:
+				return null;
+			}
 		}
 		Segment seg = new Segment(head().getToX(), head().getToY(), posX, posY);
 		segments.addLast(seg);
@@ -187,7 +182,6 @@ public class PlayerPlaying extends Player implements IPlayerPlaying {
 		if (segments.size() == maxLength * Constants.PLAYER_MAXLENGTH_FACTOR)
 			retVal = segments.pollFirst();
 		updateLogicalSegments(seg, retVal);
-		world.set(posX,posY);
 		return retVal;
 	}
 

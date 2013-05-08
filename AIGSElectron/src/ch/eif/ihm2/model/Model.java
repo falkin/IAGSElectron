@@ -5,6 +5,7 @@ import java.beans.PropertyChangeSupport;
 
 import javax.swing.SwingUtilities;
 
+import ch.eif.ai.BorderPlayerPlaying;
 import ch.eif.ihm2.cmds.*;
 import ch.eif.ihm2.cst.Constants;
 import ch.eif.ihm2.exception.CollisionDetectedException;
@@ -32,7 +33,7 @@ public class Model implements IModelOperations {
    private GameFrame frame;
 
    private PlayerPlaying         p1;
-   private PlayerPlaying         p2;
+   private BorderPlayerPlaying         p2;
 
    /**
     * Updates the two head segments of each player
@@ -219,7 +220,7 @@ public class Model implements IModelOperations {
 
       // Initialize players
       p1 = new PlayerPlaying(settings.getPlayer1().getName(), settings.getPlayer1().getColor());
-      p2 = new PlayerPlaying(settings.getPlayer2().getName(), settings.getPlayer2().getColor());
+      p2 = new BorderPlayerPlaying(settings.getPlayer2().getName(), settings.getPlayer2().getColor());
       p1.reset(true);
       p2.reset(false);
 
