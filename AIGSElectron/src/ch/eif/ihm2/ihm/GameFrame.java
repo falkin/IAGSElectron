@@ -41,7 +41,7 @@ public class GameFrame extends JFrame implements KeyEventDispatcher{
 	private Command p2up,p2right,p2down,p2left, p2shoot; //commands for player 2
 	private StateManager s = null;
 	private String infoP1;
-
+	private int nbrWinGame ;
 	private String infoP2;
 	private boolean isPlayer2Select;
 	/**
@@ -71,6 +71,13 @@ public class GameFrame extends JFrame implements KeyEventDispatcher{
 		      }
 		});
 	}
+	   
+		public int getNbrWinGame() {
+			return nbrWinGame;
+		}
+		public void setNbrWinGame(int nbrWinGame) {
+			this.nbrWinGame = nbrWinGame;
+		}
 	/**
 	 * called by the menu, starts the game
 	 */
@@ -101,8 +108,9 @@ public class GameFrame extends JFrame implements KeyEventDispatcher{
 		}
 
         gamePanel.setColorP1(p1.getColor());
+        if(p2 !=null)
         gamePanel.setColorP2(p2.getColor());
-        
+         nbrWinGame =4;
         //start the game!
         if(s==null) s = new StateManager(model, this);
         s.start();

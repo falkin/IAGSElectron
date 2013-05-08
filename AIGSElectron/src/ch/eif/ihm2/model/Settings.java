@@ -128,13 +128,13 @@ public class Settings implements ISettings, Serializable {
    public void saveHighScore(IPlayerPlaying winner, int ticks) {
       boolean todo = true;
       for (IScore s : scores)
-         if (s.getPlayerName().equals(winner.getName())) {
+         if (winner != null && s.getPlayerName().equals(winner.getName())) {
             if (s.getScore() < ticks * getGameSpeed())
                ((Score) s).setScore(ticks * getGameSpeed());
             todo = false;
          }
 
-      if (todo)
+      if (todo && winner != null)
          scores.add(new Score(winner.getName(), ticks * getGameSpeed()));
       this.saveSettingsToDisk();
    }

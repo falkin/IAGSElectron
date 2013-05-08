@@ -44,7 +44,10 @@ public class Model implements IModelOperations {
     * 
     */
    private void updateHeadSegments(IPlayerPlaying p1, IPlayerPlaying p2) {
-      gamePCS.firePropertyChange("add", null, new ISegment[] { p1.head(), p2.head() });
+	 if(p2 == null)
+		 gamePCS.firePropertyChange("add", null, new ISegment[] { p1.head(),null});
+	 else
+		 gamePCS.firePropertyChange("add", null, new ISegment[] { p1.head(), p2.head() });
    }
 
    /**
@@ -102,6 +105,7 @@ public class Model implements IModelOperations {
     */
    private void updateProgessBars(IPlayerPlaying p1, IPlayerPlaying p2) {
       infoPCS.firePropertyChange("progress1", null, new Integer(p1.getWeaponStatus()));
+      if(p2!=null)
       infoPCS.firePropertyChange("progress2", null, new Integer(p2.getWeaponStatus()));
    }
    
@@ -129,20 +133,68 @@ public class Model implements IModelOperations {
     * methods. A draw situation is not possible.
     * 
     */
-   public void collisionDetection() throws CollisionDetectedException {
-      boolean p1hasCollided = p1.hasCollided(p2);
-      boolean p2hasCollided = p2.hasCollided(p1);
-      
-      if(p1hasCollided && p2hasCollided)
-         throw new CollisionDetectedException(Translate.fromKey("info.draw.msg"),
-               GameState.draw);
-      else if(p1hasCollided)
-         throw new CollisionDetectedException(Translate.fromKeyWithParams("info.winner.msg", new Object[]{p2.getName(),new Integer(ticks*settings.getGameSpeed())}),
-               GameState.player2wins);
-      else if(p2hasCollided)
-         throw new CollisionDetectedException(Translate.fromKeyWithParams("info.winner.msg", new Object[]{p1.getName(),new Integer(ticks*settings.getGameSpeed())}),
-               GameState.player1wins);
-   }
+	public void collisionDetection() throws CollisionDetectedException {
+		boolean p1hasCollided = false;
+		boolean p2hasCollided = false;
+		if (p2 != null) {
+			p1hasCollided = p1.hasCollided(p2);
+			p2hasCollided = p2.hasCollided(p1);
+		}
+ else {
+			p1hasCollided = p1.hasCollided(null);
+		}
+		if (p1hasCollided && p2hasCollided) {
+			if (frame.getNbrWinGame() == 0) {
+				throw new CollisionDetectedException(
+						Translate.fromKey("info.draw.msg"), GameState.draw);
+			} else {
+				frame.setNbrWinGame(frame.getNbrWinGame() - 1);
+				this.init(frame);
+			}
+		} else if (p1hasCollided && p2 != null) {
+			if (frame.getNbrWinGame() == 0) {
+				throw new CollisionDetectedException(
+						Translate.fromKeyWithParams(
+								"info.winner.msg",
+								new Object[] {
+										p2.getName(),
+										new Integer(ticks
+												* settings.getGameSpeed()) }),
+						GameState.player2wins);
+			} else {
+				frame.setNbrWinGame(frame.getNbrWinGame() - 1);
+				this.init(frame);
+			}
+		} else if (p1hasCollided) {
+			if (frame.getNbrWinGame() == 0) {
+				throw new CollisionDetectedException(
+						Translate.fromKeyWithParams(
+								"info.winner.msg",
+								new Object[] {
+										"Personne",
+										new Integer(ticks
+												* settings.getGameSpeed()) }),
+						GameState.player2wins);
+			} else {
+				frame.setNbrWinGame(frame.getNbrWinGame() - 1);
+				this.init(frame);
+			}
+		} else if (p2hasCollided) {
+			if (frame.getNbrWinGame() == 0) {
+				throw new CollisionDetectedException(
+						Translate.fromKeyWithParams(
+								"info.winner.msg",
+								new Object[] {
+										p1.getName(),
+										new Integer(ticks
+												* settings.getGameSpeed()) }),
+						GameState.player1wins);
+			} else {
+				frame.setNbrWinGame(frame.getNbrWinGame() - 1);
+				this.init(frame);
+			}
+		}
+	}
 
    /**
     * Will fire a shot if necessary and possible due to cost constraints of the
@@ -154,7 +206,9 @@ public class Model implements IModelOperations {
       if(weaponRemainingCharge >= 1.0){
          int weaponRecharge = (int)weaponRemainingCharge;
          p1.rechargeWeapon(weaponRecharge);
-         p2.rechargeWeapon(weaponRecharge);
+         if (p2 != null) {
+        	 p2.rechargeWeapon(weaponRecharge);
+         }
          updateProgessBars(p1, p2);
          weaponRemainingCharge -= weaponRecharge;
       }
@@ -163,7 +217,7 @@ public class Model implements IModelOperations {
       if (p1.isShotRequested() && p1.readyToShoot()) {
          b1 = p1.fire();
       }
-      if (p2.isShotRequested() && p2.readyToShoot()) {
+      if (p2 != null && p2.isShotRequested() && p2.readyToShoot()) {
          b2 = p2.fire();
       }
       if (b1 != null || b2 != null) {
@@ -183,8 +237,10 @@ public class Model implements IModelOperations {
          int nbMovements = (int)cellRemainingAdvancement;
          for(int i = 0; i < nbMovements; i++){
             ISegment seg1 = p1.move(settings.getMaxPlayerLength());
-            ISegment seg2 = p2.move(settings.getMaxPlayerLength());
-
+            ISegment seg2 = null;
+            if (p2 != null) {
+            	 seg2 = p2.move(settings.getMaxPlayerLength());
+            }
             if (seg1 != null || seg2 != null)
                updateTailSegments(seg1, seg2);
             updateHeadSegments(p1, p2);
@@ -212,7 +268,7 @@ public class Model implements IModelOperations {
    public void init(GameFrame gf) {
       this.frame = gf;
       // Calculate how often we have to recalculate positions
-      ticks = 0;
+      if(gf.getNbrWinGame()==5 )ticks = 0;
       double ticksPerSecond = 1000.0 / ((double)Constants.TIMER_BREAK);
       weaponRemainingCharge = 0.0;
       cellRemainingAdvancement = 0.0;
@@ -240,7 +296,10 @@ public class Model implements IModelOperations {
       else if (gf.isPlayer2Select()){
     	  p2 = new PlayerPlaying(settings.getPlayer2().getName(), settings.getPlayer2().getColor());
     	  p2.reset(false);
-      }    
+      }  
+      else{
+    	  p2=null;
+      }
       isP2Active = gf.isPlayer2Select();
       infoP1 = gf.getInfoP1();
       infoP2 = gf.getInfoP2();
@@ -281,8 +340,10 @@ public class Model implements IModelOperations {
    public void terminateGame(GameState state) {
       if (state == GameState.player1wins)
          settings.saveHighScore(p1, ticks);
-      else if(state == GameState.player2wins)
-         settings.saveHighScore(p2, ticks);
+      else if(p2 == null && state == GameState.player2wins)
+         settings.saveHighScore(null, ticks);
+      else if( state == GameState.player2wins)
+          settings.saveHighScore(p2, ticks);
       updateHighScore();
    }
 }

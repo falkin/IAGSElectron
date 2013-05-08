@@ -128,23 +128,25 @@ public class BorderPlayerPlaying extends Player implements IPlayerPlaying {
 		if (heady < 0 || heady > Constants.WORLD_HEIGHT)
 			return true;
 		// Test if the two heads collide
-		if (headx == p2.head().getToX() && heady == p2.head().getToY())
+		if (p2 !=null && headx == p2.head().getToX() && heady == p2.head().getToY())
 			return true;
 		// Test if the player has crashed into a tail
 		for (Segment s : logicalSegments)
 			if (s.onSegment(headx, heady))
 				return true;
-		for (Segment s : p2.getLogicalSegments())
-			if (s.onSegment(headx, heady))
-				return true;
+		if (p2 !=null)
+			for (Segment s : p2.getLogicalSegments())
+				if (s.onSegment(headx, heady))
+					return true;
 		// Test if the player has collided with a bullet
 		Point p = new Point(headx, heady);
 		for (Bullet b : bullets)
 			if (p.distance(b.getCenter()) <= Constants.BULLET_RADIUS)
 				return true;
-		for (Bullet b : p2.getBullets())
-			if (p.distance(b.getCenter()) <= Constants.BULLET_RADIUS)
-				return true;
+		if (p2 !=null)
+			for (Bullet b : p2.getBullets())
+				if (p.distance(b.getCenter()) <= Constants.BULLET_RADIUS)
+					return true;
 		return false;
 	}
 
