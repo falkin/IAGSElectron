@@ -34,7 +34,8 @@ public class Model implements IModelOperations {
    private String         infoP1;
    private String         infoP2;
    private boolean         isP2Active;
-   
+   private int ptsP1;
+   private int ptsP2;
    private IPlayerPlaying         p1;
    private IPlayerPlaying         p2;
   
@@ -93,6 +94,8 @@ public class Model implements IModelOperations {
       infoPCS.addPropertyChangeListener("color2", pcl);
       infoPCS.addPropertyChangeListener("name1", pcl);
       infoPCS.addPropertyChangeListener("name2", pcl);
+      infoPCS.addPropertyChangeListener("uName1", pcl);
+      infoPCS.addPropertyChangeListener("uName2", pcl);
       infoPCS.addPropertyChangeListener("coverPlayer2", pcl);
       infoPCS.addPropertyChangeListener("progress1", pcl);
       infoPCS.addPropertyChangeListener("progress2", pcl);
@@ -145,54 +148,83 @@ public class Model implements IModelOperations {
 		}
 		if (p1hasCollided && p2hasCollided) {
 			if (frame.getNbrWinGame() == 0) {
-				throw new CollisionDetectedException(
-						Translate.fromKey("info.draw.msg"), GameState.draw);
+				messageEndGame();
 			} else {
+	            ISegment seg1 = p1.move(0);
+	            ISegment seg2 = p2.move(0);
+	            updateTailSegments(seg1, seg2);
 				frame.setNbrWinGame(frame.getNbrWinGame() - 1);
+				
+				frame.refrechPanel();
 				this.init(frame);
 			}
 		} else if (p1hasCollided && p2 != null) {
+			ptsP1 +=1;
 			if (frame.getNbrWinGame() == 0) {
-				throw new CollisionDetectedException(
-						Translate.fromKeyWithParams(
-								"info.winner.msg",
-								new Object[] {
-										p2.getName(),
-										new Integer(ticks
-												* settings.getGameSpeed()) }),
-						GameState.player2wins);
+				messageEndGame();
 			} else {
+	            ISegment seg1 = p1.move(0);
+	            ISegment seg2 = p2.move(0);
+	            updateTailSegments(seg1, seg2);
 				frame.setNbrWinGame(frame.getNbrWinGame() - 1);
+				frame.refrechPanel();
+				updateGameWin();
 				this.init(frame);
+				
 			}
 		} else if (p1hasCollided) {
 			if (frame.getNbrWinGame() == 0) {
-				throw new CollisionDetectedException(
-						Translate.fromKeyWithParams(
-								"info.winner.msg",
-								new Object[] {
-										"Personne",
-										new Integer(ticks
-												* settings.getGameSpeed()) }),
-						GameState.player2wins);
+				messageEndGame();
 			} else {
+	            ISegment seg1 = p1.move(0);
+	            ISegment seg2 = p2.move(0);
+	            updateTailSegments(seg1, seg2);
 				frame.setNbrWinGame(frame.getNbrWinGame() - 1);
+				frame.refrechPanel();
 				this.init(frame);
+				 
 			}
 		} else if (p2hasCollided) {
+			ptsP1 +=1;
 			if (frame.getNbrWinGame() == 0) {
-				throw new CollisionDetectedException(
-						Translate.fromKeyWithParams(
-								"info.winner.msg",
-								new Object[] {
-										p1.getName(),
-										new Integer(ticks
-												* settings.getGameSpeed()) }),
-						GameState.player1wins);
+				messageEndGame();
 			} else {
+	            ISegment seg1 = p1.move(0);
+	            ISegment seg2 = p2.move(0);
+	            updateTailSegments(seg1, seg2);
 				frame.setNbrWinGame(frame.getNbrWinGame() - 1);
+				frame.refrechPanel();
+				updateGameWin();
 				this.init(frame);
+				
+				 
 			}
+		}
+	}
+	public void messageEndGame() throws CollisionDetectedException {
+		if(ptsP1 == ptsP2){
+			throw new CollisionDetectedException(
+					Translate.fromKey("info.draw.msg"), GameState.draw);
+		}
+		else if (ptsP1> ptsP2){
+			throw new CollisionDetectedException(
+					Translate.fromKeyWithParams(
+							"info.winner.msg",
+							new Object[] {
+									p1.getName(),ptsP1,ptsP2,
+									new Integer(ticks
+											* settings.getGameSpeed()) }),
+					GameState.player1wins);
+		}
+		else {
+			throw new CollisionDetectedException(
+					Translate.fromKeyWithParams(
+							"info.winner.msg",
+							new Object[] {
+									"Personne",ptsP2,ptsP1,
+									new Integer(ticks
+											* settings.getGameSpeed()) }),
+					GameState.player2wins);
 		}
 	}
 
@@ -259,7 +291,11 @@ public class Model implements IModelOperations {
    public ISettings getSettings() {
       return Settings.getInstance();
    }
-
+   public void updateGameWin(){
+	  infoPCS.firePropertyChange("uName1", null, ptsP1);
+	   if(p2!=null)
+	  infoPCS.firePropertyChange("uName2", null, ptsP2);
+   }
    /**
     * Initializes the whole model, especially the players. Calculates how often
     * a player can move or use his weapon. Creates the commands for each player.
@@ -268,7 +304,11 @@ public class Model implements IModelOperations {
    public void init(GameFrame gf) {
       this.frame = gf;
       // Calculate how often we have to recalculate positions
-      if(gf.getNbrWinGame()==5 )ticks = 0;
+      if(gf.getNbrWinGame()==4 ){
+    	  ptsP1 = 0;
+          ptsP2=0;
+    	  ticks = 0;
+      }
       double ticksPerSecond = 1000.0 / ((double)Constants.TIMER_BREAK);
       weaponRemainingCharge = 0.0;
       cellRemainingAdvancement = 0.0;
@@ -281,6 +321,7 @@ public class Model implements IModelOperations {
 
       // Initialize players
       World.getInstance().init();
+      
       if(gf.getInfoP1()=="AI"){
     	  p1 = new BorderPlayerPlaying(settings.getAiP1().getName(), settings.getAiP1().getColor());
     	  p1.reset(true);

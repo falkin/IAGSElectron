@@ -152,10 +152,21 @@ public class InfoPanel extends JPanel implements PropertyChangeListener {
 			nameP2.setForeground((Color) e.getNewValue());
 		}
 		else if(name.equals("name1")){
-			nameP1.setText((String) e.getNewValue());
+			nameP1.setText((String) e.getNewValue()+": 0");
 		}
 		else if(name.equals("name2")){
-			nameP2.setText((String) e.getNewValue());
+			if(e.getNewValue() !=null)
+				nameP2.setText((String) e.getNewValue()+": 0");
+		}
+		else if(name.equals("uName1")){
+			int b =nameP1.getText().lastIndexOf(":");
+			String names = nameP1.getText().substring(0,b);
+			nameP1.setText(names+": "+ e.getNewValue());
+		}
+		else if(name.equals("uName2")){
+			int b =nameP2.getText().lastIndexOf(":");
+			String names = nameP2.getText().substring(0,b);
+			nameP2.setText(names+": "+ e.getNewValue());
 		}
 		else if(name.equals("progress1")){
 			//values 0 - 100

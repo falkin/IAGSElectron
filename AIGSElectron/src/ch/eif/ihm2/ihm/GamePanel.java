@@ -53,6 +53,7 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
 		 //testBullets();
 	}
 	
+	
 	public void reset(){
 		init();
 	}

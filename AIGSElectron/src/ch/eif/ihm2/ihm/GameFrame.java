@@ -110,12 +110,14 @@ public class GameFrame extends JFrame implements KeyEventDispatcher{
         gamePanel.setColorP1(p1.getColor());
         if(p2 !=null)
         gamePanel.setColorP2(p2.getColor());
-         nbrWinGame =4;
+         nbrWinGame =Constants.NBR_GAME-1;
         //start the game!
         if(s==null) s = new StateManager(model, this);
         s.start();
 	}
-	
+	public void refrechPanel(){
+		gamePanel.reset();
+	}
 	/**
 	 * called when closing the window or choosing the exit option in the message box
 	 */

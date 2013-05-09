@@ -51,7 +51,7 @@ public class Constants {
    
    // Controller constants
    public static final int TIMER_BREAK = 20;
-   
+   public static final int NBR_GAME = 5;
    // Settings constants
    public static final String DEFAULT_P1_NAME = "Player 1";
    public static final String DEFAULT_P2_NAME = "Player 2";
