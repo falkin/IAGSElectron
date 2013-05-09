@@ -21,9 +21,9 @@ public class Constants {
    public static final int CELL_WIDTH = 4;
    
    // Model constants
-   public static final int BULLET_COST = 100; //or changed back to 25
+   public static final int BULLET_COST = 25; //or changed back to 25
    public static final int WEAPON_FIRE_RANGE = 40;
-   public static final int PLAYER_MAXLENGTH_FACTOR = 20;
+   public static final int PLAYER_MAXLENGTH_FACTOR = 12;
    public static final int CELLS_PER_SECOND_SLOW = 10;
    public static final int CELLS_PER_SECOND_NORMAL = 20;
    public static final int CELLS_PER_SECOND_FAST = 30;

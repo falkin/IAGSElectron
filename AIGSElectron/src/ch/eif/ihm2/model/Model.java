@@ -159,7 +159,7 @@ public class Model implements IModelOperations {
 				this.init(frame);
 			}
 		} else if (p1hasCollided && p2 != null) {
-			ptsP1 +=1;
+			ptsP2 +=1;
 			if (frame.getNbrWinGame() == 0) {
 				messageEndGame();
 			} else {
@@ -235,14 +235,16 @@ public class Model implements IModelOperations {
     */
    public void handleWeapons() {
       weaponRemainingCharge += weaponChargePerTick;
-      if(weaponRemainingCharge >= 1.0){
-         int weaponRecharge = (int)weaponRemainingCharge;
-         p1.rechargeWeapon(weaponRecharge);
+    
+      if(weaponRemainingCharge >= 8.0){
+         int weaponRecharge = (int)2;
+         weaponRemainingCharge = 1;
+         	p1.rechargeWeapon(weaponRecharge);
          if (p2 != null) {
         	 p2.rechargeWeapon(weaponRecharge);
          }
          updateProgessBars(p1, p2);
-         weaponRemainingCharge -= weaponRecharge;
+       
       }
       IBullet b1 = null;
       IBullet b2 = null;
@@ -315,7 +317,7 @@ public class Model implements IModelOperations {
       cellAdvancementPerTick = ((double)settings.getGameSpeed())/ticksPerSecond;
      
       if (settings.getWeaponRechargeTime() == 0) 
-         weaponChargePerTick = 100.0;
+         weaponChargePerTick = 1.0;
       else 
          weaponChargePerTick = 100.0/(ticksPerSecond*settings.getWeaponRechargeTime());
 

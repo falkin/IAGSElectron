@@ -5,7 +5,8 @@ import ch.eif.ihm2.cst.Constants;
 public class World {
 	private static World world;
 	boolean[][] tab = new boolean[Constants.WORLD_WIDTH + 2][Constants.WORLD_HEIGHT + 2];
-
+	char[][] tabColor = new char[Constants.WORLD_WIDTH + 2][Constants.WORLD_HEIGHT + 2];
+	// v = Vide o = bombe r = rouge b = bleu
 	private World() {
 	}
 
@@ -28,14 +29,22 @@ public class World {
 		for(int i=0; i<tab.length;i++){
 			for(int j=0; j<tab[0].length; j++){
 				tab[i][j]=false;
+				tabColor[i][j]='v';
 			}
 		}
 	}
-
-	public void set(int x, int y) {
+	public void set(int x, int y,char color) {
 		if (x < 0 || y < 0 || y > Constants.WORLD_HEIGHT
 				|| x > Constants.WORLD_WIDTH)
 			return;
 		tab[x][y] = true;
+		tabColor[x][y]=color;
+	}
+	public void remove(int x, int y) {
+		if (x < 0 || y < 0 || y > Constants.WORLD_HEIGHT
+				|| x > Constants.WORLD_WIDTH)
+			return;
+		tab[x][y] = false;
+		tabColor[x][y] ='v';
 	}
 }

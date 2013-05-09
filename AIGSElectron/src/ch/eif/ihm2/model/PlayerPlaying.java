@@ -189,7 +189,7 @@ public class PlayerPlaying extends Player implements IPlayerPlaying {
 		if (segments.size() == maxLength * Constants.PLAYER_MAXLENGTH_FACTOR)
 			retVal = segments.pollFirst();
 		updateLogicalSegments(seg, retVal);
-		world.set(posX,posY);
+		
 		return retVal;
 	}
 

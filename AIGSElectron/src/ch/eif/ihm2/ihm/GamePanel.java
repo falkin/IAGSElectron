@@ -17,6 +17,7 @@ import ch.eif.ihm2.cst.Constants;
 import ch.eif.ihm2.model.IBullet;
 import ch.eif.ihm2.model.IModelOperations;
 import ch.eif.ihm2.model.ISegment;
+import ch.eif.ihm2.model.World;
 
 /**
  * GamePanel - Contains the lines and bullets of each Player
@@ -31,6 +32,7 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
 	private Color c2 = Color.BLUE; //color of player 2
 	private  int wwidth = Constants.WORLD_WIDTH*Constants.CELL_WIDTH;
 	private int wheight = Constants.WORLD_HEIGHT*Constants.CELL_WIDTH;
+	private World world = World.getInstance();
 	
 	public GamePanel(IModelOperations model){
 		super();
@@ -127,6 +129,11 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
 		int radius2x = radius*2;
 		int cellsize = Constants.CELL_WIDTH;
 		Ellipse2D.Float point = new Ellipse2D.Float((iBullet.getX()*cellsize)-radius,(iBullet.getY()*cellsize)-radius,radius2x,radius2x);
+		for(int i=-radius/2+1;i<radius/2-1;i++){
+			for(int p=-radius/2+1;p<radius/2-1;p++){
+				world.set(iBullet.getX()+i,iBullet.getY()+p,'o');
+			}
+		}
 		wp2d.setColor(color);
 		wp2d.setStroke(new BasicStroke(0)); //ToDo
 		wp2d.fill(point);
@@ -142,6 +149,7 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
 		fg2d.setStroke(new BasicStroke(2));
 		fg2d.setComposite(AlphaComposite.Clear); //REMOVE the line
 		Line2D l = new Line2D.Double(iSegment.getFromX()*cellsize, iSegment.getFromY()*cellsize, iSegment.getToX()*cellsize, iSegment.getToY()*cellsize);
+		world.remove(iSegment.getFromX(),iSegment.getFromY());
 		fg2d.setColor(Color.BLACK);
 		fg2d.draw(l);
 	}
@@ -151,11 +159,12 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
 	 * @param iSegment - segment to draw
 	 * @param color - color of the segment (player color)
 	 */
-	private void drawSegment(ISegment iSegment, Color color) {
+	private void drawSegment(ISegment iSegment, Color color, char colorP) {
 		int cellsize = Constants.CELL_WIDTH;
 		fg2d.setStroke(new BasicStroke(2));
 		fg2d.setComposite(AlphaComposite.SrcOver); //ToDo CHeck 
 		Line2D l = new Line2D.Double(iSegment.getFromX()*cellsize, iSegment.getFromY()*cellsize, iSegment.getToX()*cellsize, iSegment.getToY()*cellsize);
+		world.set(iSegment.getToX(),iSegment.getToY(),colorP);
 		fg2d.setColor(color);
 		fg2d.draw(l);
 	}
@@ -185,8 +194,8 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
 		//System.out.println("property changed: "+ name);
 		if(name.equals("add")){ //new segment
 			ISegment[] seg = (ISegment[]) e.getNewValue();
-			if(seg[0]!=null)drawSegment(seg[0], c1); //player 1
-			if(seg[1]!=null)drawSegment(seg[1], c2); //player 2
+			if(seg[0]!=null)drawSegment(seg[0], c1,'r'); //player 1
+			if(seg[1]!=null)drawSegment(seg[1], c2,'b'); //player 2
 		}
 		else if(name.equals("remove")){ //tail of the players disapeard
 			ISegment[] seg = (ISegment[]) e.getNewValue();

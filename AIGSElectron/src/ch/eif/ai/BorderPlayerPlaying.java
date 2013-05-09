@@ -202,7 +202,7 @@ public class BorderPlayerPlaying extends Player implements IPlayerPlaying {
 		if (segments.size() == maxLength * Constants.PLAYER_MAXLENGTH_FACTOR)
 			retVal = segments.pollFirst();
 		updateLogicalSegments(seg, retVal);
-		world.set(posX,posY);
+
 		return retVal;
 	}
 
@@ -279,12 +279,12 @@ public class BorderPlayerPlaying extends Player implements IPlayerPlaying {
 		int x = random.nextInt(Constants.WORLD_WIDTH);
 		if (isP1){
 			first = new Segment(x, 0, x, 1);
-			world.set(x,0);			
+			
 		}
 		else{
 			first = new Segment(x, Constants.WORLD_HEIGHT, x,
 					Constants.WORLD_HEIGHT - 1);
-			world.set(x,Constants.WORLD_HEIGHT);
+		
 
 			}
 		segments.add(first);
