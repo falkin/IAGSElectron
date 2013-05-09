@@ -20,8 +20,9 @@ public class BorderPlayerPlaying extends Player implements IPlayerPlaying {
 	private boolean shotRequested = false;
 	private boolean directionChanged = false;
 	private Random random = new Random();
+	private int getCut = 0;;
 	private World world = World.getInstance();
-
+	private  Random randomGenerator = new Random();
 	/**
 	 * Creates a Playing player for a normal player.
 	 * 
@@ -199,8 +200,12 @@ public class BorderPlayerPlaying extends Player implements IPlayerPlaying {
 		Segment seg = new Segment(head().getToX(), head().getToY(), posX, posY);
 		segments.addLast(seg);
 		Segment retVal = null;
-		if (segments.size() == maxLength * Constants.PLAYER_MAXLENGTH_FACTOR)
+
+		getCut+=1;
+		if ( getCut>2){
 			retVal = segments.pollFirst();
+			getCut = randomGenerator.nextInt(16);
+		}
 		updateLogicalSegments(seg, retVal);
 
 		return retVal;
