@@ -6,6 +6,7 @@ import java.beans.PropertyChangeSupport;
 import javax.swing.SwingUtilities;
 
 import ch.eif.ai.BorderPlayerPlaying;
+import ch.eif.ai.FugePlayerPlaying;
 import ch.eif.ihm2.cmds.*;
 import ch.eif.ihm2.cst.Constants;
 import ch.eif.ihm2.exception.CollisionDetectedException;
@@ -221,7 +222,7 @@ public class Model implements IModelOperations {
 					Translate.fromKeyWithParams(
 							"info.winner.msg",
 							new Object[] {
-									"Personne",ptsP2,ptsP1,
+									p2.getName(),ptsP2,ptsP1,
 									new Integer(ticks
 											* settings.getGameSpeed()) }),
 					GameState.player2wins);
@@ -236,7 +237,7 @@ public class Model implements IModelOperations {
    public void handleWeapons() {
       weaponRemainingCharge += weaponChargePerTick;
     
-      if(weaponRemainingCharge >= 8.0){
+      if(weaponRemainingCharge >= 12.0){
          int weaponRecharge = (int)2;
          weaponRemainingCharge = 1;
          	p1.rechargeWeapon(weaponRecharge);
@@ -333,7 +334,7 @@ public class Model implements IModelOperations {
     	  p1.reset(true);
       }
       if(gf.isPlayer2Select() && gf.getInfoP2()=="AI"){
-    	  p2 = new BorderPlayerPlaying(settings.getAiP2().getName(), settings.getAiP2().getColor());
+    	  p2 = new FugePlayerPlaying(settings.getAiP2().getName(), settings.getAiP2().getColor());
     	  p2.reset(false);
       }
       else if (gf.isPlayer2Select()){
