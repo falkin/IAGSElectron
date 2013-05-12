@@ -217,8 +217,8 @@ public class FugePlayerPlaying extends Player implements IPlayerPlaying {
 		bombeControl.setVariable("var9", (double)this.getWeaponStatus());//POWER
 		
 		bombeControl.setVariable("var10", this.getDirectionDouble());//DIRECTION
-		//System.out.println(posX+" "+posY+"\n R:"+World.getInstance().getTrackObstaclSensors(posX,posY)[0]+" L:"+World.getInstance().getTrackObstaclSensors(posX,posY)[1]+" ");
-		//System.out.println("D:"+World.getInstance().getTrackObstaclSensors(posX,posY)[2]+" U:"+World.getInstance().getTrackObstaclSensors(posX,posY)[3]);
+		//System.out.println(posX+" "+posY+"\n R:"+right+" L:"+left+" ");
+		//System.out.println("D:"+down+" U:"+up);
 		
 		// Evaluate
 		moveUDControl.evaluate();
@@ -228,7 +228,7 @@ public class FugePlayerPlaying extends Player implements IPlayerPlaying {
 		float ud = (float)moveUDControl.getVariable("OUT2").getValue();
 		float rl = (float)moveRLControl.getVariable("OUT2").getValue();
 		float bombe = (float)bombeControl.getVariable("OUT2").getValue();
-	//	System.out.println("B:"+bombe);
+	//	System.out.println("ud:"+ud+ " "+ rl);
 	//	System.out.println("direction:"+this.getDirectionDouble());
 		//System.out.println("weap:"+this.getWeaponStatus());
 		//System.out.println("color:"+cDown+" "+cUp+" "+cLeft+" "+cRight);
