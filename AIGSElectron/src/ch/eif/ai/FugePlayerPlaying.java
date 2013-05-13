@@ -217,8 +217,8 @@ public class FugePlayerPlaying extends Player implements IPlayerPlaying {
 		bombeControl.setVariable("var9", (double)this.getWeaponStatus());//POWER
 		
 		bombeControl.setVariable("var10", this.getDirectionDouble());//DIRECTION
-		//System.out.println(posX+" "+posY+"\n R:"+right+" L:"+left+" ");
-		//System.out.println("D:"+down+" U:"+up);
+		System.out.println(posX+" "+posY+"\n R:"+right+" L:"+left+" ");
+		System.out.println("D:"+down+" U:"+up);
 		
 		// Evaluate
 		moveUDControl.evaluate();
@@ -228,7 +228,7 @@ public class FugePlayerPlaying extends Player implements IPlayerPlaying {
 		float ud = (float)moveUDControl.getVariable("OUT2").getValue();
 		float rl = (float)moveRLControl.getVariable("OUT2").getValue();
 		float bombe = (float)bombeControl.getVariable("OUT2").getValue();
-	//	System.out.println("ud:"+ud+ " "+ rl);
+		System.out.println("ud:"+ud+ " "+ rl);
 	//	System.out.println("direction:"+this.getDirectionDouble());
 		//System.out.println("weap:"+this.getWeaponStatus());
 		//System.out.println("color:"+cDown+" "+cUp+" "+cLeft+" "+cRight);
@@ -236,7 +236,7 @@ public class FugePlayerPlaying extends Player implements IPlayerPlaying {
 			setShotRequested(true);
 		}
 		
-		if(Math.abs(ud)>= Math.abs(rl)){
+		if((Math.abs(ud)>= Math.abs(rl) && (Math.abs(rl)  <1&& (this.direction == Direction.RIGHT || this.direction == Direction.LEFT))) || (Math.abs(ud) > 1 && (this.direction == Direction.DOWN || this.direction == Direction.UP)) ){
 			if(ud < 0 && this.direction != Direction.DOWN){
 				direction = Direction.UP;
 				posY--;			

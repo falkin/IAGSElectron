@@ -117,6 +117,7 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
 			l.setLine(0, i*cellsize, wwidth, i*cellsize);
 			bg2d.draw(l);
 		}
+		
 	}
 	
 
@@ -129,8 +130,8 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
 		int radius2x = radius*2;
 		int cellsize = Constants.CELL_WIDTH;
 		Ellipse2D.Float point = new Ellipse2D.Float((iBullet.getX()*cellsize)-radius,(iBullet.getY()*cellsize)-radius,radius2x,radius2x);
-		for(int i=-radius/2+1;i<radius/2-1;i++){
-			for(int p=-radius/2+1;p<radius/2-1;p++){
+		for(int i=-(radius/4);i<(radius/4)+1;i++){
+			for(int p=-(radius/4)-1;p<(radius/4)+1;p++){
 				world.set(iBullet.getX()+i,iBullet.getY()+p,'o');
 			}
 		}
@@ -146,10 +147,11 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
 	 */
 	private void removeSegment(ISegment iSegment) {
 		int cellsize = Constants.CELL_WIDTH;
-		fg2d.setStroke(new BasicStroke(2));
+		fg2d.setStroke(new BasicStroke(3));
 		fg2d.setComposite(AlphaComposite.Clear); //REMOVE the line
-		Line2D l = new Line2D.Double(iSegment.getFromX()*cellsize, iSegment.getFromY()*cellsize, iSegment.getToX()*cellsize, iSegment.getToY()*cellsize);
-		world.remove(iSegment.getFromX(),iSegment.getFromY());
+		Line2D l = new Line2D.Double((iSegment.getFromX()*cellsize), (iSegment.getFromY()*cellsize), (iSegment.getToX()*cellsize), (iSegment.getToY()*cellsize));
+		
+		world.remove(iSegment.getToX(),iSegment.getToY());
 		fg2d.setColor(Color.BLACK);
 		fg2d.draw(l);
 	}
@@ -161,9 +163,12 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
 	 */
 	private void drawSegment(ISegment iSegment, Color color, char colorP) {
 		int cellsize = Constants.CELL_WIDTH;
-		fg2d.setStroke(new BasicStroke(2));
+		fg2d.setStroke(new BasicStroke(3));
 		fg2d.setComposite(AlphaComposite.SrcOver); //ToDo CHeck 
-		Line2D l = new Line2D.Double(iSegment.getFromX()*cellsize, iSegment.getFromY()*cellsize, iSegment.getToX()*cellsize, iSegment.getToY()*cellsize);
+		Line2D l = new Line2D.Double((iSegment.getFromX()*cellsize), (iSegment.getFromY()*cellsize), (iSegment.getToX()*cellsize), (iSegment.getToY()*cellsize));
+	//if(color.getBlue() == 255)
+//		System.out.println((iSegment.getFromX()*cellsize)+" "+ (iSegment.getFromY()*cellsize)+" "+ iSegment.getToX()*cellsize+" "+ iSegment.getToY()*cellsize);
+		
 		world.set(iSegment.getToX(),iSegment.getToY(),colorP);
 		fg2d.setColor(color);
 		fg2d.draw(l);

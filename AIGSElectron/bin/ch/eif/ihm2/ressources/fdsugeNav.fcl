@@ -1,0 +1,121 @@
+// Block definition (there may be more than one block per file)
+FUNCTION_BLOCK steerFuzzyController
+
+// Define input variables
+VAR_INPUT
+    var1  : REAL;
+	var2 : REAL;
+END_VAR
+
+// Define output variable
+VAR_OUTPUT
+    OUT2 : REAL;
+END_VAR
+
+// Fuzzify input variable 'track position down/left'
+FUZZIFY var1
+    TERM var1_1 := (1.0,1)(5,0)(10,0)(28,0)(30,0)(48,0)(50,0)(68,0)(70,0)(93,0)(95,0)(118,0)(120,0);
+    TERM var1_2 :=  (1.0,0)(5,1)(10,0)(28,0)(30,0)(48,0)(50,0)(68,0)(70,0)(93,0)(95,0)(118,0)(120,0);
+    TERM var1_3 :=  (1.0,0)(5,0)(10,1)(28,1)(30,0)(48,0)(50,0)(68,0)(70,0)(93,0)(95,0)(118,0)(120,0);
+    TERM var1_4 :=  (1.0,0)(5,0)(10,0)(28,0)(30,1)(48,1)(50,0)(68,0)(70,0)(93,0)(95,0)(118,0)(120,0);
+    TERM var1_5 :=  (1.0,0)(5,0)(10,0)(28,0)(30,0)(48,0)(50,1)(68,1)(70,0)(93,0)(95,0)(118,0)(120,0);
+    TERM var1_6 :=  (1.0,0)(5,0)(10,0)(28,0)(30,0)(48,0)(50,0)(68,0)(70,1)(93,1)(95,0)(118,0)(120,0);
+    TERM var1_7 :=  (1.0,0)(5,0)(10,0)(28,0)(30,0)(48,0)(50,0)(68,0)(70,0)(93,0)(95,1)(118,1)(120,0);
+    TERM var1_8 :=  (1.0,0)(5,0)(10,0)(28,0)(30,0)(48,0)(50,0)(68,0)(70,0)(93,0)(95,0)(118,0)(120,1);
+END_FUZZIFY
+
+
+// Fuzzify input variable 'track position up/right'
+FUZZIFY var2
+    TERM var2_1 := (1.0,1)(5,0)(10,0)(28,0)(30,0)(48,0)(50,0)(68,0)(70,0)(93,0)(95,0)(118,0)(120,0);
+    TERM var2_2 :=  (1.0,0)(5,1)(10,0)(28,0)(30,0)(48,0)(50,0)(68,0)(70,0)(93,0)(95,0)(118,0)(120,0);
+    TERM var2_3 :=  (1.0,0)(5,0)(10,1)(28,1)(30,0)(48,0)(50,0)(68,0)(70,0)(93,0)(95,0)(118,0)(120,0);
+    TERM var2_4 :=  (1.0,0)(5,0)(10,0)(28,0)(30,1)(48,1)(50,0)(68,0)(70,0)(93,0)(95,0)(118,0)(120,0);
+    TERM var2_5 :=  (1.0,0)(5,0)(10,0)(28,0)(30,0)(48,0)(50,1)(68,1)(70,0)(93,0)(95,0)(118,0)(120,0);
+    TERM var2_6 :=  (1.0,0)(5,0)(10,0)(28,0)(30,0)(48,0)(50,0)(68,0)(70,1)(93,1)(95,0)(118,0)(120,0);
+    TERM var2_7 :=  (1.0,0)(5,0)(10,0)(28,0)(30,0)(48,0)(50,0)(68,0)(70,0)(93,0)(95,1)(118,1)(120,0);
+    TERM var2_8 :=  (1.0,0)(5,0)(10,0)(28,0)(30,0)(48,0)(50,0)(68,0)(70,0)(93,0)(95,0)(118,0)(120,1);
+END_FUZZIFY
+
+// Defzzzify output variable 'steer'
+DEFUZZIFY OUT2
+    TERM dl_0 := 0;
+    TERM dl_1 := 1;
+    TERM dl_2 := 2;
+    TERM dl_3 := 3;
+    TERM dl_4 := 4;
+    TERM dl_5 := 5;
+    TERM dl_6 := 6;
+    TERM ur_0 := 0;
+    TERM ur_6 := -6;
+    TERM ur_5 := -5;    
+    TERM ur_1 := -1;
+    TERM ur_2 := -2;
+    TERM ur_3 := -3;
+    TERM ur_4 := -4;        
+    // Use 'Center Of AREA' defuzzification method
+    METHOD : COGS;
+    // Default value is 0 (if no rule activates defuzzifier)
+    DEFAULT := 0;
+END_DEFUZZIFY
+
+RULEBLOCK No1
+    // Use 'min' for 'and' (also implicit use 'max'
+    // for 'or' to fulfill DeMorgan's Law)
+    AND : MIN;
+    // Use 'min' activation method
+    ACT : MIN;
+    // Use 'max' accumulation method
+    ACCU : MAX;
+ 	
+ 	RULE 1 : IF  var1 IS var1_1 THEN OUT2 IS dl_0;
+ 	
+ 	RULE 2 : IF  var1 IS var1_2   THEN OUT2 IS dl_1;
+ 
+ 	RULE 3 : IF  var1 IS var1_3  THEN OUT2 IS dl_2;
+ 	
+ 	RULE 4 : IF  var1 IS var1_4 THEN OUT2 IS dl_3;
+ 	
+ 	RULE 5 : IF  var1 IS var1_5 THEN OUT2 IS dl_4;
+ 	
+ 	RULE 6 : IF  var1 IS var1_6 THEN OUT2 IS dl_5;
+ 
+ 	RULE 7 : IF  var1 IS var1_7 THEN OUT2 IS dl_6;
+ 	
+ 	RULE 8 : IF  var1 IS var1_8 THEN OUT2 IS dl_6;
+
+ 	RULE 9 : IF  var2 IS var2_1 THEN OUT2 IS ur_0;
+ 	
+ 	RULE 10 : IF  var2 IS var2_2   THEN OUT2 IS ur_1;
+ 
+ 	RULE 11 : IF  var2 IS var2_3  THEN OUT2 IS ur_2;
+ 	
+ 	RULE 12 : IF  var2 IS var2_4 THEN OUT2 IS ur_3;
+ 	
+ 	RULE 13 : IF  var2 IS var2_5 THEN OUT2 IS ur_4;
+ 	
+ 	RULE 14 : IF  var2 IS var2_6 THEN OUT2 IS ur_5;
+ 
+ 	RULE 15 : IF  var2 IS var2_7 THEN OUT2 IS ur_6;
+ 	
+ 	RULE 16 : IF  var2 IS var2_8 THEN OUT2 IS ur_6; 	
+
+ 	RULE 17 : IF  var2 IS var2_1 AND   var1 IS var1_1 THEN OUT2 IS ur_0;
+ 	
+ 	RULE 18 : IF  var2 IS var2_2  AND   var1 IS var1_2 THEN OUT2 IS ur_2;
+ 
+ 	RULE 19 : IF  var2 IS var2_3 AND   var1 IS var1_3 THEN OUT2 IS ur_2;
+ 	
+ 	RULE 20 : IF  var2 IS var2_4 AND   var1 IS var1_4 THEN OUT2 IS ur_3;
+ 	
+ 	RULE 21 : IF  var2 IS var2_5 AND   var1 IS var1_5 THEN OUT2 IS ur_3;
+ 	
+ 	RULE 22 : IF  var2 IS var2_6 AND   var1 IS var1_6 THEN OUT2 IS ur_4;
+ 
+ 	RULE 23 : IF  var2 IS var2_7  AND   var1 IS var1_7 THEN OUT2 IS ur_5;
+ 	
+ 	RULE 24 : IF  var2 IS var2_8 AND   var1 IS var1_8 THEN OUT2 IS ur_5; 	
+
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK

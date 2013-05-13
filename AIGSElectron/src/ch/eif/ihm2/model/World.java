@@ -47,12 +47,20 @@ public class World {
 	}
 	public void remove(int x, int y) {
 		if (x < 0 || y < 0 || y > Constants.WORLD_HEIGHT
-				|| x > Constants.WORLD_WIDTH)
+				|| x > Constants.WORLD_WIDTH || tabColor[x][y]=='o')
 			return;
 		tab[x][y] = false;
 		tabColor[x][y] ='v';
 	}
-	
+	public void printTable(){
+		for(int j=0; j<tab[0].length; j++){
+			for(int i=0; i<tab.length;i++){
+				if(tab[i][j]==false)System.out.print(0);
+				else System.out.print(1);
+			}
+			System.out.println(" ");
+		}
+	}
 	public double[] getTrackObstaclSensors(int posX,int posY,Color color){
 		double[] dist = new double[4];
 		for (int a=0;a<4;a++){

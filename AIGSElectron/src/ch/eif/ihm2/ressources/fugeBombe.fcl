@@ -22,30 +22,30 @@ END_VAR
 
 // Fuzzify input variable 'track position down'
 FUZZIFY var1
-    TERM var1_1 :=  (35,1)(40,0)(45,0);
-    TERM var1_2 :=  (35,0)(40,1)(45,0);
-    TERM var1_3 :=  (35,0)(40,0)(45,1);
+    TERM var1_1 :=  (20,1)(40,0)(100,0);
+    TERM var1_2 :=  (20,0)(40,1)(100,0);
+    TERM var1_3 :=  (20,0)(40,0)(100,1);
 END_FUZZIFY
 
 // Fuzzify input variable 'track position up'
 FUZZIFY var2
-    TERM var2_1 :=  (35,1)(40,0)(45,0);
-    TERM var2_2 :=  (35,0)(40,1)(45,0);
-    TERM var2_3 :=  (35,0)(40,0)(45,1);
+    TERM var2_1 :=  (20,1)(40,0)(100,0);
+    TERM var2_2 :=  (20,0)(40,1)(100,0);
+    TERM var2_3 :=  (20,0)(40,0)(100,1);
 END_FUZZIFY
 
 // Fuzzify input variable 'track position left'
 FUZZIFY var3
-    TERM var3_1 :=  (35,1)(40,0)(45,0);
-    TERM var3_2 :=  (35,0)(40,1)(45,0);
-    TERM var3_3 :=  (35,0)(40,0)(45,1);
+    TERM var3_1 :=  (20,1)(40,0)(100,0);
+    TERM var3_2 :=  (20,0)(40,1)(100,0);
+    TERM var3_3 :=  (20,0)(40,0)(1000,1);
 END_FUZZIFY
 
 // Fuzzify input variable 'track position right'
 FUZZIFY var4
-    TERM var4_1 :=  (35,1)(40,0)(45,0);
-    TERM var4_2 :=  (35,0)(40,1)(45,0);
-    TERM var4_3 :=  (35,0)(40,0)(45,1);
+    TERM var4_1 :=  (20,1)(40,0)(100,0);
+    TERM var4_2 :=  (20,0)(40,1)(100,0);
+    TERM var4_3 :=  (20,0)(40,0)(100,1);
 END_FUZZIFY
 
 // Fuzzify input variable 'track position color down'
@@ -128,13 +128,13 @@ RULEBLOCK No1
  	
  	RULE 4 : IF  var8 IS var8_1 THEN OUT2 IS nothing;
  	
- 	RULE 5 : IF  var5 IS var5_2 AND (var9 IS var9_3 OR var9 IS var9_4) AND var10 IS var10_1 THEN OUT2 IS fire;
+ 	RULE 5 : IF  var5 IS var5_2 AND var1 IS var1_3 AND   var9 IS var9_4 AND var10 IS var10_1 THEN OUT2 IS fire;
  	
- 	RULE 6 : IF  var6 IS var6_2 AND (var9 IS var9_3 OR var9 IS var9_4) AND var10 IS var10_2 THEN OUT2 IS fire;
+ 	RULE 6 : IF  var6 IS var6_2 AND  var2 IS var2_3  AND  var9 IS var9_4 AND var10 IS var10_2 THEN OUT2 IS fire;
 
- 	RULE 7 : IF  var7 IS var7_2 AND (var9 IS var9_3 OR var9 IS var9_4) AND var10 IS var10_3 THEN OUT2 IS fire;
+ 	RULE 7 : IF  var7 IS var7_2 AND  var3 IS var3_3 AND  var9 IS var9_4 AND var10 IS var10_3 THEN OUT2 IS fire;
  	
- 	RULE 8 : IF  var8 IS var8_2 AND (var9 IS var9_3 OR var9 IS var9_4) AND var10 IS var10_4 THEN OUT2 IS fire;
+ 	RULE 8 : IF  var8 IS var8_2 AND  var4 IS var4_3 AND  var9 IS var9_4 AND var10 IS var10_4 THEN OUT2 IS fire;
  	
  	RULE 9 : IF  var5 IS var5_2 AND (var9 IS var9_1 OR var9 IS var9_2) THEN OUT2 IS nothing;
  	
