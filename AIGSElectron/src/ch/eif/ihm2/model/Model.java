@@ -164,7 +164,7 @@ public class Model implements IModelOperations {
 			if (frame.getNbrWinGame() == 0) {
 				messageEndGame();
 			} else {
-				World.getInstance().printTable();
+				//World.getInstance().printTable();
 	            ISegment seg1 = p1.move(0);
 	            ISegment seg2 = p2.move(0);
 	            updateTailSegments(seg1, seg2);
@@ -192,7 +192,7 @@ public class Model implements IModelOperations {
 			if (frame.getNbrWinGame() == 0) {
 				messageEndGame();
 			} else {
-				World.getInstance().printTable();
+				//World.getInstance().printTable();
 	            ISegment seg1 = p1.move(0);
 	            ISegment seg2 = p2.move(0);
 	            updateTailSegments(seg1, seg2);

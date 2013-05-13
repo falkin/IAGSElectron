@@ -5,6 +5,10 @@ FUNCTION_BLOCK steerFuzzyController
 VAR_INPUT
     var1  : REAL;
 	var2 : REAL;
+	var5  : REAL;
+	var6  : REAL;
+	var7  : REAL;
+	var8  : REAL;
 END_VAR
 
 // Define output variable
@@ -35,6 +39,35 @@ FUZZIFY var2
     TERM var2_6 :=  (1.0,0)(5,0)(9,0)(10,0)(29,0)(30,0)(49,0)(50,0)(69,0)(70,1)(94,1)(95,0)(119,0)(120,0);
     TERM var2_7 :=  (1.0,0)(5,0)(9,0)(10,0)(29,0)(30,0)(49,0)(50,0)(69,0)(70,0)(94,0)(95,1)(119,1)(120,0);
     TERM var2_8 :=  (1.0,0)(5,0)(9,0)(10,0)(29,0)(30,0)(49,0)(50,0)(69,0)(70,0)(94,0)(95,0)(119,0)(120,1);
+END_FUZZIFY
+
+
+// Fuzzify input variable 'track  color down'
+FUZZIFY var5
+    TERM var5_1 :=  (-1,1)(1,0)(2,0);
+    TERM var5_2 :=  (-1,0)(1,1)(2,0);
+    TERM var5_3 :=  (-1,0)(1,0)(2,1);
+END_FUZZIFY
+
+// Fuzzify input variable 'track  color up'
+FUZZIFY var6
+    TERM var6_1 :=  (-1,1)(1,0)(2,0);
+    TERM var6_2 :=  (-1,0)(1,1)(2,0);
+    TERM var6_3 :=  (-1,0)(1,0)(2,1);
+END_FUZZIFY
+
+// Fuzzify input variable 'track  color left'
+FUZZIFY var7
+    TERM var7_1 :=  (-1,1)(1,0)(2,0);
+    TERM var7_2 :=  (-1,0)(1,1)(2,0);
+    TERM var7_3 :=  (-1,0)(1,0)(2,1);
+END_FUZZIFY
+
+// Fuzzify input variable 'track  color right'
+FUZZIFY var8
+    TERM var8_1 :=  (-1,1)(1,0)(2,0);
+    TERM var8_2 :=  (-1,0)(1,1)(2,0);
+    TERM var8_3 :=  (-1,0)(1,0)(2,1);
 END_FUZZIFY
 
 // Defzzzify output variable 'steer'
@@ -137,6 +170,27 @@ RULEBLOCK No1
 	
 	RULE 32 : IF  var2 IS var2_8 AND var1 IS var1_2 THEN OUT2 IS ur_01;
 	
+	RULE 33 : IF  var2 IS var2_1 AND var1 IS var1_1 AND (var5 IS var5_1 OR var7 IS var7_1) THEN OUT2 IS ur_1;
+	
+	RULE 34 : IF  var2 IS var2_1 AND var1 IS var1_1 AND (var6 IS var6_1 OR var8 IS var8_1) THEN OUT2 IS dl_1;
+
+	RULE 35 : IF  var2 IS var2_2 AND var1 IS var1_2 AND (var5 IS var5_1 OR var7 IS var7_1) THEN OUT2 IS ur_5;
+	
+	RULE 36 : IF  var2 IS var2_2 AND var1 IS var1_2 AND (var6 IS var6_1 OR var8 IS var8_1) THEN OUT2 IS dl_5;
+	
+	RULE 37 : IF  var2 IS var2_3 AND var1 IS var1_3 AND (var5 IS var5_1 OR var7 IS var7_1) THEN OUT2 IS ur_5;
+
+	RULE 38 : IF  var2 IS var2_3 AND var1 IS var1_3 AND (var6 IS var6_1 OR var8 IS var8_1) THEN OUT2 IS dl_5;
+
+	RULE 39 : IF  var2 IS var2_4 AND var1 IS var1_4 AND (var5 IS var5_1 OR var7 IS var7_1) THEN OUT2 IS ur_6;
+	
+	RULE 40 : IF  var2 IS var2_4 AND var1 IS var1_4 AND (var6 IS var6_1 OR var8 IS var8_1) THEN OUT2 IS dl_6;
+	
+	RULE 41 : IF  var2 IS var2_5 AND var1 IS var1_5 AND (var5 IS var5_1 OR var7 IS var7_1) THEN OUT2 IS ur_7;
+
+	RULE 42 : IF  var2 IS var2_5 AND var1 IS var1_5 AND (var6 IS var6_1 OR var8 IS var8_1) THEN OUT2 IS dl_7;
+	
 END_RULEBLOCK
+
 
 END_FUNCTION_BLOCK

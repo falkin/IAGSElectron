@@ -113,6 +113,9 @@ public class World {
 			else if(x< width && x >= 0 && y < height && y>=0 && (tabColor[x][y] != 'b' && tabColor[x][y] != 'r')){	
 				colorCase[a]=1;
 			}
+			else if(x< width && x >= 0 && y < height && y>=0 && (tabColor[x][y] == 'b' || tabColor[x][y] == 'r')){	
+				colorCase[a]=-1;
+			}
 			else{
 				colorCase[a]=0;
 			}
