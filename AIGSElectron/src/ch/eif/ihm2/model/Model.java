@@ -392,5 +392,8 @@ public class Model implements IModelOperations {
       else if( state == GameState.player2wins)
           settings.saveHighScore(p2, ticks);
       updateHighScore();
+	  infoPCS.firePropertyChange("uName1", null, 0);
+	   if(p2!=null)
+	  infoPCS.firePropertyChange("uName2", null, 0);
    }
 }

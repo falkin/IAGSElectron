@@ -43,7 +43,7 @@ public class Constants {
    public static final int P2_DEF_LT = KeyEvent.VK_LEFT;
    public static final int P2_DEF_RT = KeyEvent.VK_RIGHT;
    public static final int P2_DEF_SH = KeyEvent.VK_ENTER;
-   public static final int MAX_HIGHSCORE_ENTRIES = 5;
+   public static final int MAX_HIGHSCORE_ENTRIES = 3;
    public static final int MINIMAL_COLOR_DIFFERENCE = 80; // 10 - 100 (very close - not very close)
    public static final int COLOR_BRIGHTNESS_LEVEL = 120; //100 - 150 (quiet dark - middletone)
    public static final int MAX_RECTIME = 5000;

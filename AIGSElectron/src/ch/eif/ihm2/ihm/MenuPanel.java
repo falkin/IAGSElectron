@@ -106,6 +106,7 @@ public class MenuPanel extends JDialog  {
 		menuTabbedPane.setTitleAt(0, Translate.fromKey("menu.menutab"));
 		menuTabbedPane.setTitleAt(1, Translate.fromKey("menu.settingstab"));
 		menuTabbedPane.setTitleAt(2, Translate.fromKey("menu.helptab"));
+		menuTabbedPane.setBackground(Color.WHITE);
 		title.setText(Translate.fromKey("title"));
 		player1Lab.setText(Translate.fromKeyWithParam("playerNb",
 				new Integer(1)));
@@ -334,10 +335,10 @@ public class MenuPanel extends JDialog  {
 		menupan.add(colorBtP2, "right, gapright 20, wrap");
 		menupan.add(desactivatePlayer2,  "shrink, gapleft 20");
 		menupan.add(chkPlayer2,  " gapleft 20,  wrap");
-		
+		menupan.setBackground(Color.WHITE);
 		player1List.addItemListener(selectPlayer1);
 		player2List.addItemListener(selectPlayer2);
-		
+		chkPlayer2.setBackground(Color.WHITE);
 		chkPlayer2.setSelected(true);
 		chkPlayer2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -407,7 +408,10 @@ public class MenuPanel extends JDialog  {
 		speedGrp.add(radioBtNormal);
 		speedGrp.add(radioBtHigh);
 		speedGrp.add(radioBtGodlike);
-
+		radioBtSlow.setBackground(Color.WHITE);
+		radioBtNormal.setBackground(Color.WHITE);
+		radioBtGodlike.setBackground(Color.WHITE);
+		radioBtHigh.setBackground(Color.WHITE);
 		btPlay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				parent.startGame(player1List.getSelectedItem().toString(),player2List.getSelectedItem().toString(),chkPlayer2.isSelected());
@@ -428,13 +432,17 @@ public class MenuPanel extends JDialog  {
 		JPanel settingsPan = new JPanel(settingsLayout);
 
 		labMovement.setHorizontalAlignment(JLabel.CENTER);
-
+		labMovement.setFont(new Font("ARIAL", Font.BOLD, 25));
+		labMovement.setForeground(Color.DARK_GRAY);
+		
 		settingsPan.add(labMovement, "cell 0 0 3 1, grow");
 
 		settingsPan.add(k1, "cell 0 1 1 1, gapleft 20");
 		settingsPan.add(labShoot, "cell 1 1 1 1, growx, bottom, gapbottom 5");
 		settingsPan.add(k2, "cell 2 1 1 1, right, gapright 20");
-	
+		settingsPan.setBackground(Color.WHITE);
+		k1.setBackground(Color.WHITE);
+		k2.setBackground(Color.WHITE);
 		settingsPan.add(labReammo, "cell 0 2 1 1, gapleft 20");
 		rec.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
@@ -538,7 +546,7 @@ public class MenuPanel extends JDialog  {
 		copyrightLabel.setForeground(Color.GRAY);
 		copyrightLabel.setHorizontalAlignment(JLabel.CENTER);
 		helpPanel.add(copyrightLabel, "span,gaptop 20,center,growx");
-
+		helpPanel.setBackground(Color.WHITE);
 		return helpPanel;
 	}
 

@@ -1,15 +1,22 @@
 package ch.eif.ihm2.ihm;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.LinkedList;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTable;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import net.miginfocom.swing.MigLayout;
 import ch.eif.ihm2.model.IModelOperations;
@@ -35,12 +42,16 @@ public class InfoPanel extends JPanel implements PropertyChangeListener {
 	/*Player 2 Box*/
 	private JPanel colorP2 = new JPanel();
 	private JLabel nameP2 = new JLabel(" ");
+	private JLabel scoreP2 = new JLabel(" ");
+	private JLabel scoreP1 = new JLabel(" ");
 	private JProgressBar chargeP2 = new JProgressBar();
 	
 	private JLabel highscoreLabel = new JLabel(Translate.fromKey("highscore"));
 	private JTable highscore;
 	private HighscoreModel highscoreModel = new HighscoreModel();
-	
+	private String fclFileB = "src/ch/eif/ihm2/ressources/back.png";
+	Image bg = new ImageIcon(fclFileB).getImage();
+
 	/**
 	 * InfoPanel constructor
 	 * @param model used to add the property change listener
@@ -70,7 +81,7 @@ public class InfoPanel extends JPanel implements PropertyChangeListener {
 	 * setups the MIG layout
 	 */
 	private void initLayout(){
-		MigLayout l = new MigLayout("wrap 1, insets 10","[center]",""); //or insets top left bottom right
+		MigLayout l = new MigLayout("insets 10","0[]10[]0",""); //or insets top left bottom right
 		//additional setup
 		setLayout(l);
 	}
@@ -83,33 +94,42 @@ public class InfoPanel extends JPanel implements PropertyChangeListener {
 		/*Game Info Label on the top*/
 		//lab.setAlignmentX(CENTER_ALIGNMENT);
 		//lab.setForeground(new Color(0,102,0));
-		highscoreLabel.setForeground(Color.GREEN);
+		highscoreLabel.setForeground(Color.black);
+		highscoreLabel.setFont(new Font("ARIAL", Font.BOLD, 15));
+		
 		
 		/*Player 1 Box*/
 		colorP1.setSize(100, 100);
 		//colorP1.setBackground(new Color(220,220,220));
-		colorP1.setBackground(Color.BLACK);
-		colorP1.setBorder(BorderFactory.createLineBorder (Settings.getInstance().getPlayer1().getColor(), 2));
-		nameP1.setForeground(Settings.getInstance().getPlayer1().getColor());
+		colorP1.setBackground(Settings.getInstance().getPlayer1().getColor());
+		colorP1.setBorder(BorderFactory.createLineBorder (Color.black, 2));
+		nameP1.setForeground(Color.black);
+		nameP1.setFont(new Font("ARIAL", Font.BOLD, 20));
+		scoreP1.setFont(new Font("ARIAL", Font.BOLD, 30));
+		scoreP1.setForeground(Settings.getInstance().getPlayer1().getColor());
 		chargeP1.setMaximum(100);
 		chargeP1.setValue(0);
 		
 		/*Player 2 Box*/
 		colorP2.setSize(100, 100);
-		colorP2.setBorder(BorderFactory.createLineBorder (Settings.getInstance().getPlayer2().getColor(), 2));
+		colorP2.setBorder(BorderFactory.createLineBorder (Color.black, 2));
 		//colorP2.setBackground(new Color(220,220,220));
-		colorP2.setBackground(Color.BLACK);
-		nameP2.setForeground(Settings.getInstance().getPlayer2().getColor());
+		colorP2.setBackground(Settings.getInstance().getPlayer2().getColor());
+		nameP2.setForeground(Color.black);
+		nameP2.setFont(new Font("ARIAL", Font.BOLD, 20));
+		scoreP2.setFont(new Font("ARIAL", Font.BOLD, 30));
+		scoreP2.setForeground(Settings.getInstance().getPlayer2().getColor());
 		chargeP2.setMaximum(100);
 		chargeP2.setValue(0);
-	
-		/* highscore table */
+
+			/* highscore table */
 		highscore = new JTable(highscoreModel);
 		TableColumn column = highscore.getColumnModel().getColumn(0);
 		column.setMaxWidth(25);
-		highscore.setBackground(Color.BLACK);
-		highscore.setForeground(Color.GREEN);
-		highscore.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		highscore.setOpaque(false);
+		((DefaultTableCellRenderer)highscore.getDefaultRenderer(Object.class)).setOpaque(false);
+		highscore.setForeground(Color.black);
+	//	highscore.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		highscore.setShowHorizontalLines(false);
 		highscore.setShowVerticalLines(false);
 		highscore.setRowSelectionAllowed(false);
@@ -118,14 +138,17 @@ public class InfoPanel extends JPanel implements PropertyChangeListener {
 		highscore.setFocusable(false);
 		
 		//add(lab,"gapbottom 50");
-		add(colorP1,"w 40, h 40,gaptop 80");
-		add(nameP1,"growx");
-		add(chargeP1,"gapbottom 50, growx");
-		add(colorP2,"w 40, h 40");
-		add(nameP2,"growx");
-		add(chargeP2,"gapbottom 50, growx");
-		add(highscoreLabel,"growx");
-		add(highscore,"growx");
+		// add(colorP1,"w 70, h 10,gaptop 40,wrap 1");
+		add(nameP1,"cell 1 1 1 1,w 40%,growx,gapleft 14,gaptop 69,gapbottom 21");
+		add(scoreP1,"cell 1 1 2 1,growx,gaptop 20,wrap 1");
+		add(chargeP1,"cell 1 2 2 1,gapbottom 30,gapleft 14,gapright 25, growx,wrap 1");
+		//add(colorP2,"w 70, h 10,gaptop 20");
+		add(nameP2,"cell 1 3 1 1,w 40%,growx,gapleft 14,gaptop 38,gapbottom 21");
+		add(scoreP2,"cell 1 3 1 1,growx,gaptop 20,wrap 1");
+		add(chargeP2,"cell 1 4 2 1,gapbottom 30,gapleft 14,gapright 25, growx,wrap 1");
+		add(highscoreLabel,"cell 1 5 2 1,growx,gapleft 24, gaptop 13,wrap 1");
+		add(highscore,"cell 1 6 2 1,growx,gapleft 14,gaptop 10,wrap 1");
+		highscore.setFont(new Font("ARIAL", Font.PLAIN, 12));
 	}
 	/**
 	 * will translate all text boxes into the new language
@@ -137,6 +160,10 @@ public class InfoPanel extends JPanel implements PropertyChangeListener {
 		highscore.updateUI();
 		highscore.revalidate();
 	}
+    @Override
+    public void paintComponent(Graphics g) {
+        g.drawImage(bg, 0, 0, getWidth(), getHeight(), this);
+    }
 	/**
 	 * receives the updates from the model
 	 */
@@ -146,27 +173,27 @@ public class InfoPanel extends JPanel implements PropertyChangeListener {
 		if(name.equals("color1")){
 			colorP1.setBorder(BorderFactory.createLineBorder((Color) e.getNewValue()));
 			nameP1.setForeground((Color) e.getNewValue());
+			nameP1.setOpaque(false);
 		}
 		else if(name.equals("color2")){
 			colorP2.setBorder(BorderFactory.createLineBorder((Color) e.getNewValue()));
 			nameP2.setForeground((Color) e.getNewValue());
+			nameP2.setOpaque(false);
 		}
 		else if(name.equals("name1")){
-			nameP1.setText((String) e.getNewValue()+": 0");
+			nameP1.setText((String) e.getNewValue());
+			scoreP1.setText(""+0);
 		}
 		else if(name.equals("name2")){
 			if(e.getNewValue() !=null)
-				nameP2.setText((String) e.getNewValue()+": 0");
+				nameP2.setText((String) e.getNewValue());
+			scoreP2.setText(""+0);
 		}
 		else if(name.equals("uName1")){
-			int b =nameP1.getText().lastIndexOf(":");
-			String names = nameP1.getText().substring(0,b);
-			nameP1.setText(names+": "+ e.getNewValue());
+			scoreP1.setText(""+e.getNewValue());
 		}
-		else if(name.equals("uName2")){
-			int b =nameP2.getText().lastIndexOf(":");
-			String names = nameP2.getText().substring(0,b);
-			nameP2.setText(names+": "+ e.getNewValue());
+		else if(name.equals("uName2")){			
+			scoreP2.setText(""+e.getNewValue());
 		}
 		else if(name.equals("progress1")){
 			//values 0 - 100
@@ -177,6 +204,7 @@ public class InfoPanel extends JPanel implements PropertyChangeListener {
 		}
 		else if(name.equals("highscore")){
 			LinkedList<IScore> val = (LinkedList<IScore>) e.getNewValue();
+			
 			highscoreModel.setScores(val);
 			highscore.updateUI();
 			highscore.revalidate();
@@ -187,3 +215,4 @@ public class InfoPanel extends JPanel implements PropertyChangeListener {
 		}
 	}
 }
+

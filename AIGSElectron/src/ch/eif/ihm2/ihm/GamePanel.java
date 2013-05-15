@@ -3,8 +3,10 @@ package ch.eif.ihm2.ihm;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
@@ -12,11 +14,14 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import ch.eif.ihm2.cst.Constants;
 import ch.eif.ihm2.model.IBullet;
 import ch.eif.ihm2.model.IModelOperations;
 import ch.eif.ihm2.model.ISegment;
+import ch.eif.ihm2.model.Settings;
 import ch.eif.ihm2.model.World;
 
 /**
@@ -33,19 +38,25 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
 	private  int wwidth = Constants.WORLD_WIDTH*Constants.CELL_WIDTH;
 	private int wheight = Constants.WORLD_HEIGHT*Constants.CELL_WIDTH;
 	private World world = World.getInstance();
-	
+	private String fclFileB = "src/ch/eif/ihm2/ressources/backgame.png";
+	Image bg = new ImageIcon(fclFileB).getImage();
 	public GamePanel(IModelOperations model){
 		super();
 		init();
 		model.addGamePropertyChangeListener(this);
 	}
+    
+    
+        
+    
 	/**
 	 * setups the gamepanel screen (image buffers)
 	 */
 	private void init(){
-		 bgBuff = new BufferedImage(Constants.CELL_WIDTH*Constants.WORLD_WIDTH,Constants.CELL_WIDTH*Constants.WORLD_HEIGHT,BufferedImage.TYPE_INT_ARGB);
-		 fgBuff = new BufferedImage(Constants.CELL_WIDTH*Constants.WORLD_WIDTH,Constants.CELL_WIDTH*Constants.WORLD_HEIGHT,BufferedImage.TYPE_INT_ARGB);
-		 wpBuff = new BufferedImage(Constants.CELL_WIDTH*Constants.WORLD_WIDTH,Constants.CELL_WIDTH*Constants.WORLD_HEIGHT,BufferedImage.TYPE_INT_ARGB);
+
+		 bgBuff = new BufferedImage(Constants.CELL_WIDTH*Constants.WORLD_WIDTH+1,Constants.CELL_WIDTH*Constants.WORLD_HEIGHT+1,BufferedImage.TYPE_INT_ARGB);
+		 fgBuff = new BufferedImage(Constants.CELL_WIDTH*Constants.WORLD_WIDTH+1,Constants.CELL_WIDTH*Constants.WORLD_HEIGHT+1,BufferedImage.TYPE_INT_ARGB);
+		 wpBuff = new BufferedImage(Constants.CELL_WIDTH*Constants.WORLD_WIDTH+1,Constants.CELL_WIDTH*Constants.WORLD_HEIGHT+1,BufferedImage.TYPE_INT_ARGB);
 		 bg2d = bgBuff.createGraphics();
 		 fg2d = fgBuff.createGraphics();
 		 wp2d = wpBuff.createGraphics();
@@ -101,9 +112,10 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
 		/* GRID */
 		int cellsize = Constants.CELL_WIDTH;
 		Rectangle2D.Float r = new Rectangle2D.Float(0, 0, wwidth, wheight);
-		bg2d.setPaint(Color.BLACK);
+		Color c  =new Color(233,193,136);
+		bg2d.setPaint(c);
 		bg2d.fill(r);
-		bg2d.setPaint(new Color(0,102,0,100));
+		bg2d.setPaint(new Color(180,117,97,100));
 		bg2d.setStroke(new BasicStroke (8.0F, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0F));
 		bg2d.draw(r);
 		bg2d.setStroke(new BasicStroke(1));
@@ -178,17 +190,20 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
 	 * repaints the gamepanel (wow, three layers!)
 	 */
 	protected void paintComponent(Graphics g) {
+	
 		Graphics2D g2d = (Graphics2D)g;
 		double height = (double) getHeight();
 		double width = (double)getWidth();
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2d.setPaint(Color.BLACK);
+		
 		g2d.fillRect(0, 0, getWidth(), getHeight());
 		int x = (int)(width/2-(wwidth/2));
 		int y = (int)(height/2-(wheight/2));
+		g2d.drawImage(bg, 0, 0, getWidth(), getHeight(), this);
 		g2d.drawImage(bgBuff,x,y,null);
 		g2d.drawImage(fgBuff,x,y,null);
 		g2d.drawImage(wpBuff,x,y,null);
+		
 	}
 	
 	/**
@@ -199,8 +214,8 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
 		//System.out.println("property changed: "+ name);
 		if(name.equals("add")){ //new segment
 			ISegment[] seg = (ISegment[]) e.getNewValue();
-			if(seg[0]!=null)drawSegment(seg[0], c1,'r'); //player 1
-			if(seg[1]!=null)drawSegment(seg[1], c2,'b'); //player 2
+			if(seg[0]!=null)drawSegment(seg[0], Settings.getInstance().getPlayer1().getColor(),'r'); //player 1
+			if(seg[1]!=null)drawSegment(seg[1], Settings.getInstance().getPlayer2().getColor(),'b'); //player 2
 		}
 		else if(name.equals("remove")){ //tail of the players disapeard
 			ISegment[] seg = (ISegment[]) e.getNewValue();
@@ -209,8 +224,8 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
 		}
 		else if(name.equals("shot")){ //oh new bullet on the screen
 			IBullet[] bullet = (IBullet[]) e.getNewValue();	
-			if(bullet[0]!=null)drawShot(bullet[0], c1);
-			if(bullet[1]!=null)drawShot(bullet[1], c2);
+			if(bullet[0]!=null)drawShot(bullet[0], Settings.getInstance().getPlayer1().getColor());
+			if(bullet[1]!=null)drawShot(bullet[1], Settings.getInstance().getPlayer2().getColor());
 		}
 		repaint();
 	}

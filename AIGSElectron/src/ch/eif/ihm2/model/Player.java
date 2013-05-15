@@ -41,7 +41,7 @@ public class Player implements IPlayer, Serializable {
     * 
     */
    public static Player getDefaultP1(){
-      return new Player(Constants.DEFAULT_P1_NAME, Constants.DEFAULT_P1_COLOR);
+      return new Player(Constants.DEFAULT_P1_NAME, new Color(255,51,51));
    }
    
    /**
@@ -49,7 +49,7 @@ public class Player implements IPlayer, Serializable {
     * 
     */
    public static Player getDefaultP2(){
-      return new Player(Constants.DEFAULT_P2_NAME, Constants.DEFAULT_P2_COLOR);
+      return new Player(Constants.DEFAULT_P2_NAME,new Color(0,102,153));
    }
    
    /**
@@ -57,7 +57,7 @@ public class Player implements IPlayer, Serializable {
     * 
     */
    public static Player getDefaultIA1(){
-      return new Player(Constants.DEFAULT_AI, Constants.DEFAULT_P1_COLOR);
+      return new Player(Constants.DEFAULT_AI, new Color(255,51,51));
    }
    
    /**
@@ -65,7 +65,7 @@ public class Player implements IPlayer, Serializable {
     * 
     */
    public static Player getDefaultIA2(){
-      return new Player(Constants.DEFAULT_AI, Constants.DEFAULT_P2_COLOR);
+      return new Player(Constants.DEFAULT_AI, new Color(0,102,153));
    }
    @Override
    public void setColor(Color color) {

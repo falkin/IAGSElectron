@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import net.miginfocom.swing.MigLayout;
+import ch.eif.ihm2.Electron;
 import ch.eif.ihm2.cmds.Command;
 import ch.eif.ihm2.cst.Constants;
 import ch.eif.ihm2.manager.StateManager;
@@ -52,12 +53,15 @@ public class GameFrame extends JFrame implements KeyEventDispatcher{
 		super(Translate.fromKey("title"));
 		model = m;		
 	    setSize(WIDTH, HEIGHT);
-	    setMinimumSize(new Dimension(WIDTH, HEIGHT));
+	    setResizable(false);
+	    
+	    //setMinimumSize(new Dimension(WIDTH, HEIGHT));
 	    setBackground(Color.BLACK);
 		initLayout();
 		initComponents();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
+		
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -86,6 +90,10 @@ public class GameFrame extends JFrame implements KeyEventDispatcher{
 		setInfoP2(infoP2);
 		setInfoP1(infoP1);
 		menuPanel.setVisible(false);
+		 gamePanel.setVisible(true);
+		    infoPanel.setVisible(true);
+
+	    setSize(WIDTH, HEIGHT);
 		if(infoP1 == "AI"){
 			p1 = Settings.getInstance().getAiP1();
 			k1 = null;
@@ -162,11 +170,18 @@ public class GameFrame extends JFrame implements KeyEventDispatcher{
 	 * setups the gamepanels
 	 */
 	private void initComponents() {
+
 	    infoPanel = new InfoPanel(model);
 	    gamePanel = new GamePanel(model);
 	    add(gamePanel,"w 100%, h 100%");
 	    add(infoPanel, "w "+INFOPANELWIDTH+"px, growy");
-	    menuPanel = new MenuPanel(this,this.model);	    
+	    menuPanel = new MenuPanel(this,this.model);	  
+	    menuPanel.setBackground(Color.white);
+	    setBackground(Color.WHITE);
+	    setSize((int)(Constants.MENUWIDTH*1.6), (int)(Constants.MENUHEIGHT*1.6));
+	    gamePanel.setVisible(false);
+	    infoPanel.setVisible(false);
+	    infoPanel.setBackground(Color.GRAY);
 	}
 
 	/**
@@ -228,10 +243,17 @@ public class GameFrame extends JFrame implements KeyEventDispatcher{
 				options[0]);
 		
 		
-		if(result == 0)
+		if(result == 0){
+			nbrWinGame =Constants.NBR_GAME-1;
 			s.start();
-		else if(result == 1)
-			menuPanel.setVisible(true);
+		}
+		else if(result == 1){
+			 setSize((int)(Constants.MENUWIDTH*1.6), (int)(Constants.MENUHEIGHT*1.6));
+			 gamePanel.setVisible(false);
+			 infoPanel.setVisible(false);
+			 menuPanel.setVisible(true);
+			setBackground(Color.WHITE);
+		}
 		else
 			quitGame();
 		gamePanel.reset();

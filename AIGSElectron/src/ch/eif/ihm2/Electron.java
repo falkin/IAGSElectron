@@ -14,10 +14,15 @@ import ch.eif.ihm2.model.Settings;
  * 			Bernhard Leutwiler
  */
 public class Electron {
+	
+	public static GameFrame f;
 	public static void main(String[] args) {
 		Translate.setLocale(Settings.getInstance().getLanguage());
 		IModelOperations m = new Model();
-		GameFrame f = new GameFrame(m);
+	    f = new GameFrame(m);
 		f.setVisible(true); //have fun
 	}
+	
+
+	
 }
