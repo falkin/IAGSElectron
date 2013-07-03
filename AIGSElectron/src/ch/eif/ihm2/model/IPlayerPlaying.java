@@ -12,6 +12,10 @@ import java.util.LinkedList;
  */
 
 public interface IPlayerPlaying {
+	public void setScore(int score, int numberGame);
+	
+	public int getScore();
+	
 	public LinkedList<Segment> getLogicalSegments(); 
 	
 	public LinkedList<Bullet> getBullets();

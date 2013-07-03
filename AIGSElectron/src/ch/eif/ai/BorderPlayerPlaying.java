@@ -317,4 +317,16 @@ public class BorderPlayerPlaying extends Player implements IPlayerPlaying {
 	public LinkedList<Bullet> getBullets() {
 		return bullets;
 	}
+
+	@Override
+	public void setScore(int score, int numberGame) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getScore() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
